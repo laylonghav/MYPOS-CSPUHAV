@@ -1,0 +1,7 @@
+>npm install react-router-dom
+>npm install antd //UI framework
+>npm install antd icon
+
+>npm install react-icon
+>npm install axios 
+>tailwind css framework like boostrap

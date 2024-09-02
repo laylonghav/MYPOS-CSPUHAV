@@ -1,0 +1,5 @@
+>npm init 
+>npm install express
+
+
++create index.js // roote project

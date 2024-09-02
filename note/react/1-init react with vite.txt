@@ -1,0 +1,7 @@
+>npm create vite@latest
+    -Choose projectname
+    -Choose framework
+    -java scrip
+ cd web-mypos-cspuhav
+  npm install
+  npm run dev   
