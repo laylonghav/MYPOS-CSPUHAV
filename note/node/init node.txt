@@ -3,3 +3,10 @@
 
 
 +create index.js // roote project
+
+>npm install cors
+>npm install mysql2
+
+>npm install express-validator@latest
+
+npm install --save-dev nodemon

@@ -1,0 +1,3 @@
+[05/09/2024 04:03:22] Error: Column 'role_id' cannot be null
+[05/09/2024 04:04:07] Error: Column 'role_id' cannot be null
+[05/09/2024 04:04:53] Error: Column 'role_id' cannot be null

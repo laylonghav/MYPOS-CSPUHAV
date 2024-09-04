@@ -1,6 +1,14 @@
-import { Outlet } from 'react-router-dom'
-
+import { Outlet, useNavigate } from "react-router-dom";
+import "./MainLayout.css";
+import logo from "../../assets/Image/Logo/Mylogo.png";
+import profile from "../../assets/Image/Logo/laylonghav.jpg";
 import React, { useState } from "react";
+import { Input } from "antd";
+import { IoIosNotifications } from "react-icons/io";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
+const { Search } = Input;
+
+
 import {
   DesktopOutlined,
   FileOutlined,
@@ -19,24 +27,56 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
-  ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
+  {
+    key: "",
+    icon: <PieChartOutlined />,
+    children: null,
+    label: "Dashaboard",
+  },
+  {
+    key: "employee",
+    icon: <PieChartOutlined />,
+    children: null,
+    label: "Employee",
+  },
+  {
+    key: "customer",
+    icon: <PieChartOutlined />,
+    children: null,
+    label: "Customer",
+  },
+  {
+    key: "product",
+    icon: <PieChartOutlined />,
+    children: [
+      {
+        key: "product/category",
+        icon: <PieChartOutlined />,
+        children: null,
+        label: "Category",
+      },
+      {
+        key: "product/stock",
+        icon: <PieChartOutlined />,
+        children: null,
+        label: "Stock",
+      },
+    ],
+    label: "Product",
+  },
 ];
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const navigate = useNavigate();
+
+  const OnclickMenu = (item) => {
+    navigate(item.key);
+  };
+
   return (
     <Layout
       style={{
@@ -54,24 +94,45 @@ const MainLayout = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          onClick={OnclickMenu}
         />
       </Sider>
       <Layout>
-        <div style={{ backgroundColor: "gray", height: 80 }}></div>
+        <div className="admin-header">
+          <div className="admin-header-g1">
+            <div className="">
+              <img className="Admin-logo" src={logo} alt="Mylogo" />
+            </div>
+            <div className="Brand">
+              <div className="txt-brand-name">My-POS-CSPUHAV</div>
+              <div className="brandName">Computer & Phone Shop</div>
+            </div>
+            <div className="txtSeach">
+              <Search placeholder="input search text" enterButton />
+            </div>
+          </div>
+          <div className="admin-header-g2">
+            <MdOutlineMarkEmailUnread className="icon-notify" />
+            <IoIosNotifications className="icon-email" />
+            <div className="Lavel_User">
+              <div className="txt-user-name">Lay longhav</div>
+              <div className="">Admin</div>
+            </div>
+            <img className="Profile-User" src={profile} alt="Profile" />
+          </div>
+        </div>
         <Content
           style={{
-            margin: "0 16px",
+            margin: "10px",
           }}
         >
           <div
+          className="Admin-body"
             style={{
-              padding: 24,
-              minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
           >
-            
             <Outlet />
           </div>
         </Content>

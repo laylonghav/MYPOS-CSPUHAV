@@ -1,0 +1,1 @@
+[04/09/2024 15:19:57] Error: Table 'mypos_cspuhav.categories' doesn't exist

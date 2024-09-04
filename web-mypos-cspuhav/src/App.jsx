@@ -6,6 +6,8 @@ import "./App.css";
 import Mainlayout from "./component/layout/Mainlayout";
 import MainLayoutAuth from "./component/layout/MainLayoutAuth";
 import CategoryPage from "./page/category/CategoryPage";
+import EmployeePage from "./page/employee/EmployeePage";
+import CustomerPage from "./page/customer/CustomerPage";
 
 function App() {
   return (
@@ -13,8 +15,10 @@ function App() {
       <Routes>
         <Route element={<Mainlayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/employee" element={<EmployeePage />} />
           <Route path="/category" element={<CategoryPage />} />
-          <Route path="/product" element={<CategoryPage />} />
+          <Route path="/customer" element={<CustomerPage />} />
+          <Route path="/product/category" element={<CategoryPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 
