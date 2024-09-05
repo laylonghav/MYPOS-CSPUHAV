@@ -1,26 +1,26 @@
-
 const { db, logError } = require("../util/helper");
-const bcrypt =require("bcrypt");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const config  = require("../util/config");
 
-exports.regester = async(req, res) => {
+exports.regester = async (req, res) => {
   try {
-
     let password = req.body.password;
-    password = bcrypt.hashSync(password,10);
-    
+    password = bcrypt.hashSync(password, 10);
+
     let sql =
       "INSERT INTO `user`(`role_id`, `name`, `username`, `password`, `is_active`, `create_by`) VALUES (:role_id, :name, :username, :password, :is_active, :create_by)";
-      let data = await db.query(sql, {
-        role_id: req.body.role_id,
-        name: req.body.name,
-        username: req.body.username,
-        password: password,
-        is_active: req.body.is_active,
-        create_by: req.body.create_by,
-      });
+    let data = await db.query(sql, {
+      role_id: req.body.role_id,
+      name: req.body.name,
+      username: req.body.username,
+      password: password,
+      is_active: req.body.is_active,
+      create_by: req.body.create_by,
+    });
     res.json({
       data: data,
-      message : "Register successfully !"
+      message: "Register successfully !",
     });
   } catch (error) {
     logError("auth.regester", error, res);
@@ -50,9 +50,15 @@ exports.login = async (req, res) => {
           },
         });
       } else {
-        return res.json({
-          message: "Login successfully!",
-          profile: data,
+        delete data[0].password;
+        let obj = {
+          profile: data[0],
+          permision: ["view_all", "delete", "edit"],
+        };
+        return  res.json({
+          message: "Login success",
+          ...obj,
+          access_token: await getAccessToken(obj),
         });
       }
     }
@@ -61,12 +67,84 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.profile = (req, res) => {
+exports.profile = async (req, res) => {
   try {
-    res.json({
-      list: [1],
-    });
+
+     res.json({
+       profile: req.profile,
+     });
+    // let sql = "SELECT * FROM `user` WHERE id=:id";
+    // let [data] = await db.query(sql, {
+    //   id: req.body.id,
+    // });
+    // res.json({
+    //   list: data.length > 0 ? data[0] : null,
+    // });
   } catch (error) {
     logError("auth.profile", error, res);
   }
+};
+
+
+exports.validate_token = () => {
+  // call in midleware in route (role route, user route, teacher route)
+  return (req, res, next) => {
+    var authorization = req.headers.authorization; // token from client
+    var token_from_client = null;
+    if (authorization != null && authorization != "") {
+      token_from_client = authorization.split(" "); // authorization : "Bearer lkjsljrl;kjsiejr;lqjl;ksjdfakljs;ljl;r"
+      token_from_client = token_from_client[1]; // get only access_token
+    }
+    if (token_from_client == null) {
+      res.status(401).send({
+        message: "Unauthorized",
+      });
+    } else {
+      jwt.verify(
+        token_from_client,
+        config.config.token.access_token_key,
+        (error, result) => {
+          if (error) {
+            res.status(401).send({
+              message: "Unauthorized",
+              error: error,
+            });
+          } else {
+            req.current_id = result.data.profile.id;
+            req.profile = result.data.profile; // write user property
+            req.permision = result.data.permision; // write user property
+            next(); // continue controller
+          }
+        }
+      );
+    }
+  };
+};
+
+
+// const getAccessToken = async () => {
+//   // const keyToken = "2142tegfgdfg645646";
+//   const data = {
+//     id: 1,
+//     name: "Sok",
+//   };
+//   const Access_token = await jwt.sign(
+//     { data },
+//     config.config.token.access_token_key,
+//     {
+//       expiresIn: "180s",
+//     }
+//   );
+//   return Access_token;
+// };
+
+const getAccessToken = async (paramData) => {
+  const acess_token = await jwt.sign(
+    { data: paramData },
+    config.config.token.access_token_key,
+    {
+      expiresIn: "180s",
+    }
+  );
+  return acess_token;
 };

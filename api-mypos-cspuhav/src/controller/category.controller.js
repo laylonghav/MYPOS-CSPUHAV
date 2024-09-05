@@ -4,6 +4,7 @@ exports.getlist = async (req, res) => {
   try {
     const [data] = await db.query("SELECT * FROM `category` ORDER BY id DESC");
     res.json({
+      I_know_you_are_ID: req.current_id,
       list: data, // Use 'data' here instead of 'list'
     });
   } catch (error) {

@@ -11,5 +11,9 @@ module.exports = {
       DATABASE: "mypos_cspuhav",
       PORT: 3306,
     },
+    token: {
+      access_token_key:
+        "#$*%*(*234898ireiuLJEROI#@)(#)$*@#)*$(@948858839798283838jaflke",
+    },
   },
 };
