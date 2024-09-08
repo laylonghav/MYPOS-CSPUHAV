@@ -32,34 +32,33 @@ exports.create = async (req, res) => {
   }
 };
 exports.update = async (req, res) => {
-   try {
-     var sql =
-       "UPDATE `category` SET `Name`=:Name,`Description`=:Description,`Status`=:Status WHERE id=:id";
-     var param = {
-       id: req.body.id,
-       Name: req.body.Name,
-       Description: req.body.Description,
-       Parent_id: req.body.Parent_id,
-       Status: req.body.Status,
-      
-     };
+  try {
+    var sql =
+      "UPDATE `category` SET `Name`=:Name,`Description`=:Description,`Status`=:Status WHERE id=:id";
+    var param = {
+      id: req.body.id,
+      Name: req.body.Name,
+      Description: req.body.Description,
+      Parent_id: req.body.Parent_id,
+      Status: req.body.Status,
+    };
 
-     const [data] = await db.query(sql, param);
-     res.json({
-       data: data,
-       message: "Update data successfully !",
-     });
-   } catch (error) {
-     logError("category.Delete", error, res);
-   }
+    const [data] = await db.query(sql, param);
+    res.json({
+      data: data,
+      message: "Update data successfully !",
+    });
+  } catch (error) {
+    logError("category.Delete", error, res);
+  }
 };
 exports.remove = async (req, res) => {
   try {
     var sql = "DELETE FROM `category` WHERE id=:id";
     var param = {
-      id: req.body.id,     
+      id: req.body.id,
     };
-    
+
     const [data] = await db.query(sql, param);
     res.json({
       data: data,

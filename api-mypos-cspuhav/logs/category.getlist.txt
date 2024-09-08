@@ -8,3 +8,24 @@
 [04/09/2024 19:41:57] ReferenceError: list is not defined
 [04/09/2024 19:42:24] ReferenceError: list is not defined
 [04/09/2024 19:42:24] ReferenceError: list is not defined
+[08/09/2024 22:02:40] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:02:43] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:02:43] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:09:10] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:09:10] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:09:16] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:09:16] Error: Table 'mypos_cspuhav.categorya' doesn't exist
+[08/09/2024 22:19:41] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:41] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:44] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:44] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:47] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:47] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:52] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:19:52] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:23] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:23] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:27] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:27] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1
+[08/09/2024 22:30:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'BY id DESC' at line 1

@@ -13,10 +13,12 @@ import {
 } from "antd";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import MainPage from "../../component/layout/MainPage";
 
 export default function CategoryPage() {
   const [formrefe] = Form.useForm();
   const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     visblaModule: false,
     id: null,
@@ -32,7 +34,9 @@ export default function CategoryPage() {
 
   const getlist = async () => {
     try {
+      setLoading(true);
       const res = await request("category", "get"); // Await the asynchronous request
+      setLoading(false);
       setList(res.list || []); // Safely set the list to an empty array if res.list is undefined
     } catch (error) {
       console.error("Failed to fetch categories:", error);
@@ -142,7 +146,7 @@ export default function CategoryPage() {
     // alert(JSON.stringify(item));
   };
   return (
-    <div>
+    <MainPage loading={loading}>
       {/* <h1>CategoryPage-{list.length}</h1>
       <h1>{list.length > 0 && list[1].Name}</h1> */}
       <Button type="primary" icon={<MdAdd />} onClick={onClickAddbtn}>
@@ -278,6 +282,6 @@ export default function CategoryPage() {
           },
         ]}
       />
-    </div>
+    </MainPage>
   );
 }
