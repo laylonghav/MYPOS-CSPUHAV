@@ -29,7 +29,14 @@ exports.regester = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     let { password, username } = req.body;
-    let sql = "SELECT * FROM `user` WHERE username=:username";
+    // let sql = "SELECT * FROM `user` WHERE username=:username";
+    let sql =
+      "SELECT " +
+      " u.*," +
+      " r.name as role_name" +
+      " FROM user u " +
+      " INNER JOIN role r ON u.role_id = r.id " +
+      " WHERE u.username=:username ";
     let [data] = await db.query(sql, {
       username: username,
     });

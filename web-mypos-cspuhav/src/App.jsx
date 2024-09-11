@@ -3,17 +3,19 @@ import HomePage from "./page/home/HomePage";
 import LoginPage from "./page/auth/LoginPage";
 import RegisterPage from "./page/auth/RegisterPage";
 import "./App.css";
-import Mainlayout from "./component/layout/Mainlayout";
+
+//  import Mainlayout from "./component/layout/Mainlayout";
 import MainLayoutAuth from "./component/layout/MainLayoutAuth";
 import CategoryPage from "./page/category/CategoryPage";
 import EmployeePage from "./page/employee/EmployeePage";
 import CustomerPage from "./page/customer/CustomerPage";
+import MainLayout from "./component/layout/MainLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Mainlayout />}>
+        <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/employee" element={<EmployeePage />} />
           <Route path="/category" element={<CategoryPage />} />

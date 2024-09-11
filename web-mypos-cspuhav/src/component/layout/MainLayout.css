@@ -27,6 +27,7 @@
   width: 80px;
   margin-right: 10px;
   border-radius: 50%;
+  cursor: pointer;
 }
 .Profile-User {
   width: 60px;
@@ -34,6 +35,7 @@
   margin-left: 10px;
   object-fit: cover;
   border-radius: 60%;
+   cursor: pointer;
 }
 
 .txtSeach {
@@ -46,16 +48,22 @@
 }
 
 .icon-notify {
-    margin-top: 10px;
+  margin-top: 10px;
   font-size: 35px;
   margin-right: 15px;
 }
 .icon-email {
-    margin-top: 10px;
+  margin-top: 10px;
   font-size: 35px;
-   margin-right: 15px;
+  margin-right: 15px;
 }
-.Admin-body{
-    padding: 16px;
-    height: calc(100vh - 100px);
+.Admin-body {
+  padding: 16px;
+  height: calc(100vh - 100px);
+}
+.btnLOGOUT Button{
+  margin-top: 15px;
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
