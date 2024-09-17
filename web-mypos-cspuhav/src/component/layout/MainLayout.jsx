@@ -72,7 +72,7 @@ const items = [
         label: "List Product",
       },
       {
-        key: "product/category",
+        key: "/category",
         icon: <PieChartOutlined />,
         children: null,
         label: "Category",
@@ -204,7 +204,7 @@ const MainLayout = () => {
 
   const OnclickMenu = (item) => {
     navigate(item.key);
-    alert(item.key);
+    // alert(item.key);
   };
 
   const LOGOUT = () => {

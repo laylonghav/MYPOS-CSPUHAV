@@ -1,7 +1,30 @@
 const { db, logError } = require("../util/helper");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const config  = require("../util/config");
+const config = require("../util/config");
+
+exports.getlist = async (req, res) => {
+  try {
+    // let { password, username } = req.body;
+    // let sql = "SELECT * FROM `user` WHERE username=:username";
+    let sql =
+      "SELECT " +
+      " u.id," +
+      " u.name," +
+      " u.username," +
+      " u.is_active," +
+      " r.name as role_name" +
+      " FROM user u " +
+      " INNER JOIN role r ON u.role_id = r.id ";
+    let [data] = await db.query(sql);
+
+    return res.json({
+      data: data,
+    });
+  } catch (error) {
+    logError("auth.getlist", error, res);
+  }
+};
 
 exports.regester = async (req, res) => {
   try {
@@ -62,7 +85,7 @@ exports.login = async (req, res) => {
           profile: data[0],
           permision: ["view_all", "delete", "edit"],
         };
-        return  res.json({
+        return res.json({
           message: "Login success",
           ...obj,
           access_token: await getAccessToken(obj),
@@ -76,10 +99,9 @@ exports.login = async (req, res) => {
 
 exports.profile = async (req, res) => {
   try {
-
-     res.json({
-       profile: req.profile,
-     });
+    res.json({
+      profile: req.profile,
+    });
     // let sql = "SELECT * FROM `user` WHERE id=:id";
     // let [data] = await db.query(sql, {
     //   id: req.body.id,
@@ -91,7 +113,6 @@ exports.profile = async (req, res) => {
     logError("auth.profile", error, res);
   }
 };
-
 
 exports.validate_token = () => {
   // call in midleware in route (role route, user route, teacher route)
@@ -128,7 +149,6 @@ exports.validate_token = () => {
   };
 };
 
-
 // const getAccessToken = async () => {
 //   // const keyToken = "2142tegfgdfg645646";
 //   const data = {
@@ -150,7 +170,7 @@ const getAccessToken = async (paramData) => {
     { data: paramData },
     config.config.token.access_token_key,
     {
-      expiresIn: "180s",
+      expiresIn: "1d", //"180s",
     }
   );
   return acess_token;
