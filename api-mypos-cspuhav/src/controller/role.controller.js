@@ -15,7 +15,7 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     var sql =
-      "INSERT INTO `role`( `Name`, `code`, `status`) VALUES (:Name, :code, :status,)";
+      "INSERT INTO `role`( `Name`, `code`, `status`) VALUES (:Name, :code, :status)";
     var param = {
       Name: req.body.Name,
       code: req.body.code,

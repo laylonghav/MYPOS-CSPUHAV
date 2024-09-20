@@ -13,13 +13,18 @@ exports.getlist = async (req, res) => {
       " u.name," +
       " u.username," +
       " u.is_active," +
+      " u.create_by," +
       " r.name as role_name" +
       " FROM user u " +
       " INNER JOIN role r ON u.role_id = r.id ";
     let [data] = await db.query(sql);
+    const [role] = await db.query(
+      "SELECT `id` as value, `Name` as label FROM `role`;"
+    );
 
     return res.json({
       data: data,
+      data_role: role,
     });
   } catch (error) {
     logError("auth.getlist", error, res);
@@ -39,7 +44,7 @@ exports.regester = async (req, res) => {
       username: req.body.username,
       password: password,
       is_active: req.body.is_active,
-      create_by: req.body.create_by,
+      create_by: req.auth?.name, // get current user that action this module
     });
     res.json({
       data: data,
@@ -139,7 +144,7 @@ exports.validate_token = () => {
             });
           } else {
             req.current_id = result.data.profile.id;
-            req.profile = result.data.profile; // write user property
+            req.auth = result.data.profile; // write user property
             req.permision = result.data.permision; // write user property
             next(); // continue controller
           }
