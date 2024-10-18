@@ -23,9 +23,9 @@ import {
   setAccessToken,
   setProfile,
 } from "../../store/profile.store";
+import { request } from "../../util/helper";
+import { configStore } from "../../store/configStore";
 const { Header, Content, Footer, Sider } = Layout;
-
-
 
 function getItem(label, key, icon, children) {
   return {
@@ -188,6 +188,7 @@ const items = [
   },
 ];
 const MainLayout = () => {
+  const { count, increase, decrease, config, setconfig } = configStore();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -197,10 +198,25 @@ const MainLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    getconfigapi();
     if (!profile) {
       navigate("/login");
     }
   }, []);
+
+  const getconfigapi = async () => {
+    try {
+      const res = await request("config", "get");
+      console.log(res); // Debugging purposes
+      if (res) {
+        setconfig(res);
+      } else {
+        console.error("Config data is missing or invalid.");
+      }
+    } catch (error) {
+      console.error("Failed to fetch config data:", error);
+    }
+  };
 
   const OnclickMenu = (item) => {
     navigate(item.key);

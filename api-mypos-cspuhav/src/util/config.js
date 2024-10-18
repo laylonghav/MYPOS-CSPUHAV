@@ -3,7 +3,7 @@ module.exports = {
   config: {
     app_name: "",
     app_version: "",
-    image_path: "",
+    image_path: "C:/xampp/htdocs/fullstack/image_cspuhav",
     db: {
       HOST: "localhost",
       USER: "root",

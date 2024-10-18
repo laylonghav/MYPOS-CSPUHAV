@@ -35,6 +35,8 @@ export default function CategoryPage() {
   const getlist = async () => {
     try {
       setLoading(true);
+      const res_config = await request("config", "get"); 
+      console.log(res_config)
       const res = await request("category", "get"); // Await the asynchronous request
       setLoading(false);
       setList(res.list || []); // Safely set the list to an empty array if res.list is undefined
@@ -149,9 +151,32 @@ export default function CategoryPage() {
     <MainPage loading={loading}>
       {/* <h1>CategoryPage-{list.length}</h1>
       <h1>{list.length > 0 && list[1].Name}</h1> */}
-      <Button type="primary" icon={<MdAdd />} onClick={onClickAddbtn}>
-        New
-      </Button>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingBottom: 10,
+        }}
+        className=""
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+          className=""
+        >
+          <div className="">Category</div>
+          <Input.Search
+            style={{ marginLeft: 10 }}
+            placeholder="Search"
+          ></Input.Search>
+        </div>
+        <Button type="primary" icon={<MdAdd />} onClick={onClickAddbtn}>
+          New
+        </Button>
+      </div>
       <Modal
         open={state.visblaModule}
         title={formrefe.getFieldValue("id") ? "Edit category" : "New category"}

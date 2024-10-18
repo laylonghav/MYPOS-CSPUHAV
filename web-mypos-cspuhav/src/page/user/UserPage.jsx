@@ -47,12 +47,12 @@ export default function UserPage() {
   const onClickDelete = () => {};
   const onClickEdite = (item) => {
     form.setFieldsValue({
-      ...item,
-      // name: item.name,
-      // username: item.code,
-      // password: item.password,
-      // role_id: item.role_id,
-      // is_active: item.status,
+      // ...item,
+      name: item.name,
+      username: item.username,
+      password: item.password,
+      role_id: item.role_name,
+      is_active: item.is_active,
     });
     onClickAddbtn();
   };

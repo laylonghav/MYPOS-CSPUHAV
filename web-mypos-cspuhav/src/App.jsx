@@ -12,6 +12,8 @@ import CustomerPage from "./page/customer/CustomerPage";
 import MainLayout from "./component/layout/MainLayout";
 import UserPage from "./page/user/UserPage";
 import RolePage from "./page/role/RolePage";
+import SupplierPage from "./page/purchase/SupplierPage";
+import ProductPage from "./page/product/ProductPage";
 
 function App() {
   return (
@@ -22,9 +24,10 @@ function App() {
           <Route path="/employee" element={<EmployeePage />} />
           <Route path="/category" element={<CategoryPage />} />
           <Route path="/customer" element={<CustomerPage />} />
-          {/* <Route path="/category" element={<CategoryPage />} /> */}
+          <Route path="/supplier" element={<SupplierPage />} />
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
+          <Route path="/product" element={<ProductPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

@@ -1,3 +1,12 @@
 [05/09/2024 04:03:22] Error: Column 'role_id' cannot be null
 [05/09/2024 04:04:07] Error: Column 'role_id' cannot be null
 [05/09/2024 04:04:53] Error: Column 'role_id' cannot be null
+[17/10/2024 12:55:27] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:28] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:28] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:29] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:29] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:29] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:55:29] Error: Duplicate entry 'user5' for key 'username'
+[17/10/2024 12:56:10] Error: Cannot add or update a child row: a foreign key constraint fails (`mypos_cspuhav`.`user`, CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`))
+[17/10/2024 12:56:11] Error: Cannot add or update a child row: a foreign key constraint fails (`mypos_cspuhav`.`user`, CONSTRAINT `user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`))

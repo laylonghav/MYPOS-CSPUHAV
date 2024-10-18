@@ -119,7 +119,7 @@ export default function RolePage() {
 
   return (
     <div>
-      <h1>RolePage</h1>
+      {/* <h1>RolePage</h1> */}
       <div
         style={{
           display: "flex",
@@ -135,7 +135,7 @@ export default function RolePage() {
           }}
           className=""
         >
-          <div className="">User</div>
+          <div className="">Role</div>
           <Input.Search
             style={{ marginLeft: 10 }}
             placeholder="Search"
@@ -145,7 +145,7 @@ export default function RolePage() {
           New
         </Button>
       </div>
-
+      
       <Modal
         title={form.getFieldValue("id") ? "Edit role" : "New role"}
         open={state.visible}
