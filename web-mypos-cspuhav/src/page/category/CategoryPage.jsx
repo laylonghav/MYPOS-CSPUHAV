@@ -50,17 +50,17 @@ export default function CategoryPage() {
       ...state,
       visblaModule: true,
       id: data.id,
-      Name: data.Name,
-      Description: data.Description,
-      Status: data.Status,
-      Parent_id: data.Parent_id,
+      name: data.name,
+      description: data.description,
+      status: data.status,
+      parent_id: data.parent_id,
     });
     formrefe.setFieldsValue({
       id: data.id, //hiden id (save | update)
-      Name: data.Name,
-      Description: data.Description,
-      Status: data.Status,
-      Parent_id: data.Parent_id,
+      name: data.name,
+      description: data.description,
+      status: data.status,
+      parent_id: data.parent_id,
     });
     console.log(data);
   };
@@ -122,12 +122,13 @@ export default function CategoryPage() {
   // };
 
   const onFinish = async (item) => {
+    console.log(item)
     var data = {
       id: formrefe.getFieldValue("id"),
-      Name: item.Name,
-      Description: item.Description,
-      Status: item.Status,
-      Parent_id: item.Parent_id,
+      name: item.name,
+      description: item.description,
+      status: item.status,
+      parent_id: item.parent_id,
     };
     var method = "post";
     if (formrefe.getFieldValue("id")) {
@@ -225,13 +226,13 @@ export default function CategoryPage() {
         /> */}
 
         <Form layout="vertical" onFinish={onFinish} form={formrefe}>
-          <Form.Item name={"Name"} label="Name">
+          <Form.Item name={"name"} label="Name">
             <Input placeholder="Name" />
           </Form.Item>
-          <Form.Item name={"Description"} label="Description">
+          <Form.Item name={"description"} label="Description">
             <Input.TextArea placeholder="Description" />
           </Form.Item>
-          <Form.Item name={"Status"} label="Status">
+          <Form.Item name={"status"} label="Status">
             <Select
               placeholder="Select Status"
               options={[
@@ -247,7 +248,7 @@ export default function CategoryPage() {
             />
           </Form.Item>
           <Space>
-            <Button>Cacel</Button>
+            <Button onClick={oncloseModule}>Cacel</Button>
             <Button htmlType="submit" type="primary">
               {formrefe.getFieldValue("id") ? "Update" : "Save"}
             </Button>
@@ -265,18 +266,18 @@ export default function CategoryPage() {
           },
           {
             title: "Name",
-            dataIndex: "Name",
-            key: "Name",
+            dataIndex: "name",
+            key: "name",
           },
           {
             title: "Description",
-            dataIndex: "Description",
-            key: "Description",
+            dataIndex: "description",
+            key: "description",
           },
           {
             title: "Status",
-            dataIndex: "Status",
-            key: "Status",
+            dataIndex: "status",
+            key: "status",
             render: (item, data, index) =>
               item == 1 ? (
                 <Tag color="green">Active</Tag>

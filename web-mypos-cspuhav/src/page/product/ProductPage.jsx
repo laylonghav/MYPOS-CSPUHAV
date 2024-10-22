@@ -70,11 +70,15 @@ export default function ProductPage() {
   const onClickEdite = (data, index) => {};
   const onClickDelete = async (data, index) => {};
 
-  const onClickNew = () => {
-    setState((p) => ({
-      ...p,
-      visibleModule: true,
-    }));
+  const onClickNew = async () => {
+    const res = await request("new_barcode", "post");
+    if (res && !res.error) {
+      form.setFieldValue("barcode", res.barcode);
+      setState((p) => ({
+        ...p,
+        visibleModule: true,
+      }));
+    }
   };
 
   const oncloseModule = () => {
@@ -82,14 +86,23 @@ export default function ProductPage() {
       ...p,
       visibleModule: false,
     }));
+    form.resetFields();
   };
 
   const onFinish = async (item) => {
     console.log(item);
+    // id	category_id	barcode	name	brand	description	qty	price	discount	status	image	create_by	create_at
 
     const params = new FormData();
     params.append("name", item.name);
-    params.append("name1", "Test");
+    params.append("category_id", item.category_id);
+    params.append("barcode", item.barcode);//item.barcode
+    params.append("brand", item.brand);
+    params.append("description", item.description);
+    params.append("qty", item.qty);
+    params.append("price", item.price);
+    params.append("discount", item.discount);
+    params.append("status", item.status);
 
     if (item.image_default) {
       params.append(
@@ -103,6 +116,13 @@ export default function ProductPage() {
 
     try {
       const res = await request("product", "post", params);
+      if (res && !res.error) {
+        message.success(res.message)
+        oncloseModule();
+        // getlist();
+      } else {
+        message.error(res.error?.barcode);
+      }
       console.log(res);
     } catch (error) {
       console.error("Request failed", error);
@@ -170,7 +190,7 @@ export default function ProductPage() {
                     message: "Please input product name",
                   },
                 ]}
-                name={"product name"}
+                name={"name"}
                 label="Product name"
               >
                 <Input placeholder="Product name" />
@@ -206,6 +226,18 @@ export default function ProductPage() {
               >
                 <InputNumber style={{ width: "100%" }} placeholder="price" />
               </Form.Item>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input discount",
+                  },
+                ]}
+                name={"discount"}
+                label="Discount"
+              >
+                <InputNumber style={{ width: "100%" }} placeholder="Discount" />
+              </Form.Item>
             </Col>
             <Col span={12}>
               {" "}
@@ -228,13 +260,13 @@ export default function ProductPage() {
                 rules={[
                   {
                     required: true,
-                    message: "Please input discount",
+                    message: "Please input barcode",
                   },
                 ]}
-                name={"discount"}
-                label="Discount"
+                name={"barcode"}
+                label="Barcode"
               >
-                <InputNumber style={{ width: "100%" }} placeholder="Discount" />
+                <Input disabled placeholder="Barcode" />
               </Form.Item>
               <Form.Item
                 rules={[
@@ -248,23 +280,23 @@ export default function ProductPage() {
               >
                 <InputNumber style={{ width: "100%" }} placeholder="Quantity" />
               </Form.Item>
+              <Form.Item name={"status"} label="Status">
+                <Select
+                  placeholder="Select Status"
+                  options={[
+                    {
+                      label: "Active",
+                      value: 1,
+                    },
+                    {
+                      label: "Inactive",
+                      value: 0,
+                    },
+                  ]}
+                />
+              </Form.Item>
             </Col>
           </Row>
-          <Form.Item name={"Status"} label="Status">
-            <Select
-              placeholder="Select Status"
-              options={[
-                {
-                  label: "Active",
-                  value: 1,
-                },
-                {
-                  label: "Inactive",
-                  value: 0,
-                },
-              ]}
-            />
-          </Form.Item>
 
           <Form.Item name={"description"} label="Description">
             <Input.TextArea placeholder="Description" />

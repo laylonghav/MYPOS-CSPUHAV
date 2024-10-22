@@ -15,12 +15,12 @@ exports.getlist = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     var sql =
-      "INSERT INTO `category`( `Name`, `Description`, `Parent_id`, `Status`) VALUES (:Name, :Description, :Parent_id, :Status)";
+      "INSERT INTO `category`( `name`, `description`, `Parent_id`, `status`) VALUES (:name, :description, :Parent_id, :status)";
     var param = {
-      Name: req.body.Name,
-      Description: req.body.Description,
-      Parent_id: req.body.Parent_id,
-      Status: req.body.Status,
+      name: req.body.name,
+      description: req.body.description,
+      parent_id: req.body.parent_id,
+      status: req.body.status,
     };
     const [data] = await db.query(sql, param);
     res.json({
@@ -34,13 +34,13 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     var sql =
-      "UPDATE `category` SET `Name`=:Name,`Description`=:Description,`Status`=:Status WHERE id=:id";
+      "UPDATE `category` SET `name`=:name,`description`=:description,`status`=:status WHERE id=:id";
     var param = {
       id: req.body.id,
-      Name: req.body.Name,
-      Description: req.body.Description,
-      Parent_id: req.body.Parent_id,
-      Status: req.body.Status,
+      name: req.body.name,
+      description: req.body.description,
+      parent_id: req.body.parent_id,
+      status: req.body.status,
     };
 
     const [data] = await db.query(sql, param);

@@ -1,5 +1,6 @@
 .admin-header {
-  background-color: aqua;
+  /* color: white; */
+  background-color: #fdfbf9;
   height: 80px;
   display: flex;
   justify-content: space-between;
@@ -59,7 +60,7 @@
 }
 .Admin-body {
   padding: 16px;
-  height: calc(100vh - 100px);
+height: calc(100vh - 100px);
 }
 .btnLOGOUT Button{
   margin-top: 15px;

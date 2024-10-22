@@ -10,11 +10,25 @@ const { Search } = Input;
 
 import {
   DesktopOutlined,
+  DollarOutlined,
+  DotChartOutlined,
   DownOutlined,
   FileOutlined,
+  FundProjectionScreenOutlined,
+  GlobalOutlined,
+  GroupOutlined,
+  KeyOutlined,
+  OrderedListOutlined,
+  PayCircleOutlined,
   PieChartOutlined,
+  ProductOutlined,
+  SettingOutlined,
+  ShopOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
   SmileOutlined,
   TeamOutlined,
+  UnlockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
@@ -44,36 +58,36 @@ const items = [
   },
   {
     key: "pos",
-    icon: <PieChartOutlined />,
+    icon: <FundProjectionScreenOutlined />,
     children: null,
     label: "POS",
   },
   {
     key: "customer",
-    icon: <PieChartOutlined />,
+    icon: <TeamOutlined />,
     children: null,
     label: "Customer",
   },
   {
     key: "order",
-    icon: <PieChartOutlined />,
+    icon: <OrderedListOutlined />,
     label: "Order",
     children: null,
   },
   {
     key: "product",
-    icon: <PieChartOutlined />,
+    icon: <ProductOutlined />,
     label: "Product",
     children: [
       {
         key: "product",
-        icon: <PieChartOutlined />,
+        icon: <ProductOutlined />,
         children: null,
         label: "List Product",
       },
       {
         key: "/category",
-        icon: <PieChartOutlined />,
+        icon: <GroupOutlined />,
         children: null,
         label: "Category",
       },
@@ -81,24 +95,24 @@ const items = [
   },
   {
     key: "purchase",
-    icon: <PieChartOutlined />,
+    icon: <ShoppingCartOutlined />,
     label: "Purchase",
     children: [
       {
         key: "supplier",
-        icon: <PieChartOutlined />,
+        icon: <TeamOutlined />,
         children: null,
         label: "Supplier",
       },
       {
         key: "purchase",
-        icon: <PieChartOutlined />,
+        icon: <ShoppingCartOutlined />,
         children: null,
         label: "List Purchase",
       },
       {
         key: "purchase_product",
-        icon: <PieChartOutlined />,
+        icon: <DotChartOutlined />,
         children: null,
         label: "Purchase Product",
       },
@@ -106,18 +120,18 @@ const items = [
   },
   {
     key: "expanse",
-    icon: <PieChartOutlined />,
+    icon: <ShoppingOutlined />,
     label: "Expanse",
     children: [
       {
         key: "expanse_type",
-        icon: <PieChartOutlined />,
+        icon: <ShoppingOutlined />,
         children: null,
         label: "Expanse Type",
       },
       {
         key: "expanse",
-        icon: <PieChartOutlined />,
+        icon: <ShoppingOutlined />,
         children: null,
         label: "Expanse",
       },
@@ -125,18 +139,18 @@ const items = [
   },
   {
     key: "employee",
-    icon: <PieChartOutlined />,
+    icon: <TeamOutlined />,
     label: "Employee",
     children: [
       {
         key: "employee",
-        icon: <PieChartOutlined />,
+        icon: <TeamOutlined />,
         children: null,
         label: "Employee",
       },
       {
         key: "payroll",
-        icon: <PieChartOutlined />,
+        icon: <PayCircleOutlined />,
         children: null,
         label: "Payroll",
       },
@@ -144,24 +158,24 @@ const items = [
   },
   {
     key: "user",
-    icon: <PieChartOutlined />,
+    icon: <UserOutlined />,
     label: "User",
     children: [
       {
         key: "user",
-        icon: <PieChartOutlined />,
+        icon: <UserOutlined />,
         children: null,
         label: "User",
       },
       {
         key: "role",
-        icon: <PieChartOutlined />,
+        icon: <KeyOutlined />,
         children: null,
         label: "Role",
       },
       {
         key: "role_permission",
-        icon: <PieChartOutlined />,
+        icon: <UnlockOutlined />,
         children: null,
         label: "Role Permission",
       },
@@ -169,18 +183,18 @@ const items = [
   },
   {
     key: "sitting",
-    icon: <PieChartOutlined />,
+    icon: <SettingOutlined />,
     label: "Sitting",
     children: [
       {
         key: "currency",
-        icon: <PieChartOutlined />,
+        icon: <DollarOutlined />,
         children: null,
         label: "Currency",
       },
       {
         key: "langauge",
-        icon: <PieChartOutlined />,
+        icon: <GlobalOutlined />,
         children: null,
         label: "Langauge",
       },

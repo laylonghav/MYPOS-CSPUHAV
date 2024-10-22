@@ -39,7 +39,7 @@ exports.uploadFile = multer({
 
 
 exports.removeFile = async (fileName) => {
-  var filePath = "C:/xampp/htdocs/fullstack/image_cspuhav";
+  var filePath = "config.image_path";
   try {
     await fs.unlink(filePath + fileName);
     return "File deleted successfully";
