@@ -1,0 +1,21 @@
+/* .image_product {
+  border-radius: 10px;
+   overflow: hidden;
+  outline: hidden;
+}
+.image_product:hover {
+  overflow: hidden;
+  outline: hidden;
+  border-radius: 10px;
+} */
+.hover-image {
+  overflow: hidden;
+  border-radius: 8px !important; /* Initial border-radius */
+  /* transition: border-radius 0.3s ease; */
+}
+
+.hover-image:hover {
+  overflow: hidden;
+  border-radius: 8px !important; /* Hover effect */
+}
+

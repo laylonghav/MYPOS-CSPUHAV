@@ -7,6 +7,31 @@ const {config} = require("./config");
 exports.db = connection;
 exports.logError = logError;
 
+exports.isEmpty = (value) => {
+  if (
+    value == "" ||
+    value == null ||
+    value == undefined ||
+    value == "null" ||
+    value == "undefined"
+  ) {
+    return true;
+  }
+  return false;
+};
+
+exports.isEmail = (data) => {
+  return true;
+};
+
+exports.formatDateServer = (data) => {
+  return true;
+};
+
+exports.formatDateClient = (data) => {
+  return true;
+};
+
 
 exports.uploadFile = multer({
   storage: multer.diskStorage({
@@ -37,14 +62,31 @@ exports.uploadFile = multer({
   },
 });
 
-
 exports.removeFile = async (fileName) => {
-  var filePath = "config.image_path";
+  var filePath = config.image_path;
   try {
     await fs.unlink(filePath + fileName);
     return "File deleted successfully";
   } catch (err) {
-    console.error("Error deleting file:", err);
-    throw err;
+   if (err.code === "ENOENT") {
+     console.error("Error deleting file: File does not exist");
+      return "Error: File does not exist";
+   } else {
+     console.error("Error deleting file:", err);
+     throw err; // Re-throw unexpected errors
+   }
   }
 };
+
+// exports.removeFile = async (fileName) => {
+//   var filePath = "config.image_path";
+//   try {
+//     await fs.unlink(filePath + fileName);
+//     return "File deleted successfully";
+//   } catch (err) {
+//     console.error("Error deleting file:", err);
+//     throw err;
+//   }
+// };
+
+

@@ -52,3 +52,6 @@
 [22/10/2024 18:13:54] ReferenceError: isExistbarcode is not defined
 [22/10/2024 18:13:57] ReferenceError: isExistbarcode is not defined
 [22/10/2024 18:13:57] ReferenceError: isExistbarcode is not defined
+[26/10/2024 00:45:19] Error: Duplicate entry 'P024' for key 'p_barcode'
+[26/10/2024 00:48:25] Error: Column count doesn't match value count at row 1
+[26/10/2024 01:00:28] Error: Column count doesn't match value count at row 1

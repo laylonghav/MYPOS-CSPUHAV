@@ -17,23 +17,26 @@ export default function SupplierPage() {
     Status: "",
     Parent_id: null,
   });
-  const [statesearch, setStatesearch] = useState({
-    txtsearch: "",
-  });
+
 
   useEffect(() => {
     getlist();
-  }, [statesearch.txtsearch]); // Add dependency for statesearch
+  }, []); 
+  
+
+  const [filter, setFilter] = useState({
+    txtsearch: "",
+  });
 
   const getlist = async () => {
     try {
+      const param = {
+        txtsearch: filter.txtsearch,
+      };
       setLoading(true);
-      const res = await request(
-        "supplier?txtsearch=" + statesearch.txtsearch,
-        "get"
-      );
+      const res = await request("supplier", "get", param);
       setLoading(false);
-      setList(res.list || []);
+      setList(res.list);
     } catch (error) {
       console.error("Failed to fetch suppliers:", error);
       setLoading(false);
@@ -121,7 +124,7 @@ export default function SupplierPage() {
           <div>Supplier</div>
           <Input.Search
             onChange={(value) =>
-              setStatesearch((p) => ({
+              setFilter((p) => ({
                 ...p,
                 txtsearch: value.target.value,
               }))
@@ -149,7 +152,7 @@ export default function SupplierPage() {
             label="Name"
             rules={[{ required: true, message: "Name is required" }]}
           >
-            <Input placeholder="Name" allowClear  />
+            <Input placeholder="Name" allowClear />
           </Form.Item>
           <Form.Item
             name="code"
@@ -198,10 +201,12 @@ export default function SupplierPage() {
           { title: "Website", dataIndex: "website", key: "website" },
           { title: "Note", dataIndex: "note", key: "note" },
           { title: "Create By", dataIndex: "create_by", key: "create_by" },
-          { title: "Create at", dataIndex: "create_at", key: "create_at",
-            render:(value)=>dayjs(value).format("DD-MM-YYYY")
-
-           },
+          {
+            title: "Create at",
+            dataIndex: "create_at",
+            key: "create_at",
+            render: (value) => dayjs(value).format("DD-MM-YYYY"),
+          },
           {
             title: "Action",
             key: "Action",

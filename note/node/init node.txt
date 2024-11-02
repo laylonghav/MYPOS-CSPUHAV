@@ -10,3 +10,7 @@
 >npm install express-validator@latest
 
 npm install --save-dev nodemon
+
+
+ALTER TABLE employee
+ADD FOREIGN KEY (role_id) REFERENCES role(id);

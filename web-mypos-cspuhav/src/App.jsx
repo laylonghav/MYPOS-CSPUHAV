@@ -3,6 +3,8 @@ import HomePage from "./page/home/HomePage";
 import LoginPage from "./page/auth/LoginPage";
 import RegisterPage from "./page/auth/RegisterPage";
 import "./App.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 //  import Mainlayout from "./component/layout/Mainlayout";
 import MainLayoutAuth from "./component/layout/MainLayoutAuth";
@@ -12,8 +14,10 @@ import CustomerPage from "./page/customer/CustomerPage";
 import MainLayout from "./component/layout/MainLayout";
 import UserPage from "./page/user/UserPage";
 import RolePage from "./page/role/RolePage";
-import SupplierPage from "./page/purchase/SupplierPage";
+import SupplierPage from "./page/supplier/SupplierPage";
 import ProductPage from "./page/product/ProductPage";
+import ExpensePage from "./page/expense/ExpensePage";
+import ExpenseTypePage from "./page/expense_type/ExpenseTypePage";
 
 function App() {
   return (
@@ -28,6 +32,8 @@ function App() {
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
           <Route path="/product" element={<ProductPage />} />
+          <Route path="/expense" element={<ExpensePage />} />
+          <Route path="/expense_type" element={<ExpenseTypePage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

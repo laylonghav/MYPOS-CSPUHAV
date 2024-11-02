@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { request } from "../../util/helper";
-import { Slide } from "react-slideshow-image";
-import "react-slideshow-image/dist/styles.css"; // Import Slider from react-slick
-import ViewSlider from "react-view-slider";
 import "./style.css";
 import {
   Space,
@@ -19,7 +16,6 @@ import {
   Upload,
   Col,
   Row,
-  Carousel,
 } from "antd";
 import { MdImageNotSupported } from "react-icons/md";
 import { MdAdd, MdEdit } from "react-icons/md";
@@ -34,13 +30,6 @@ import { Content } from "antd/es/layout/layout";
 export default function ProductPage() {
   //   const { category } = configStore().config;
   //   const {category,role}=config;
-  const [settings, setSettings] = useState({
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  });
 
   const { config } = configStore();
   const [form] = Form.useForm();
@@ -48,7 +37,6 @@ export default function ProductPage() {
     loading: false,
     visibleModule: false,
     list: [],
-    image: [],
   });
 
   const getBase64 = (file) =>
@@ -120,7 +108,6 @@ export default function ProductPage() {
         setState((pre) => ({
           ...pre,
           list: res.list,
-          image: res.products,
         }));
       } else {
         console.error("Unexpected response structure:", res); // Handle unexpected structure
@@ -130,15 +117,13 @@ export default function ProductPage() {
     }
   };
 
-  const onClickEdit = async (data, index) => {
+  const onClickEdit = (data, index) => {
     form.setFieldsValue({ ...data });
     setState((p) => ({
       ...p,
       visibleModule: true,
     }));
-
-    // Handle primary image
-    if (data.image && data.image !== "") {
+    if (data.image != "" && data.image != null) {
       const imageproduct = [
         {
           uid: "-1",
@@ -148,47 +133,8 @@ export default function ProductPage() {
         },
       ];
       setImageDefault(imageproduct);
-    } else {
-      setImageDefault([]); // Clear if no image
-    }
-
-    // Handle optional images
-    // if (data.product_image && data.product_image.length > 0) {
-    //   const imageproduct_optional = data.product_image.map((image, index) => ({
-    //     uid: index.toString(), // Unique UID for each optional image
-    //     name: image,
-    //     status: "done",
-    //     url: configs.image_Path + image,
-    //   }));
-    //   setImageOptional(imageproduct_optional);
-    // } else {
-    //   setImageOptional([]); // Clear if no optional images
-    // }
-
-    // Handle optional images
-    if (data.product_image && data.product_image.length > 0) {
-      try {
-        const res_image = await request("product_image/" + data.id, "get");
-        if (res_image && !res_image.error && res_image.list) {
-          const imageProductOptional = res_image.list.map((item, index) => ({
-            uid: index.toString(), // Ensure uid is a unique string
-            name: item.image,
-            status: "done",
-            url: configs.image_Path + item.image,
-          }));
-          setImageOptional(imageProductOptional);
-        } else {
-          setImageOptional([]); // Clear if no optional images from response
-        }
-      } catch (error) {
-        console.error("Error fetching optional images:", error);
-        setImageOptional([]);
-      }
-    } else {
-      setImageOptional([]); // Clear if no optional images
     }
   };
-
   const onClickDelete = async (data, index) => {
     // alert(JSON.stringify(data));
     Modal.confirm({
@@ -223,85 +169,25 @@ export default function ProductPage() {
     getlist();
     form.resetFields();
     setImageDefault([]);
-    setImageOptional([]);
   };
   const btnFilter = () => {
     getlist();
   };
 
-  // const onFinish = async (item) => {
-  //   // console.log({
-  //   //   ...item,
-  //   //   id: form.getFieldValue("id"),
-  //   //   image: form.getFieldValue("image"),
-  //   // });
-  //   //   return;
-  //   // id	category_id	barcode	name	brand	description	qty	price	discount	status	image	create_by	create_at
-
-  //   const params = new FormData();
-  //   params.append("name", item.name);
-  //   params.append("category_id", item.category_id);
-  //   params.append("barcode", item.barcode); //item.barcode
-  //   params.append("brand", item.brand);
-  //   params.append("description", item.description);
-  //   params.append("qty", item.qty);
-  //   params.append("price", item.price);
-  //   params.append("discount", item.discount);
-  //   params.append("status", item.status);
-
-  //   //when update ,we use to key
-  //   params.append("image", form.getFieldValue("image")); // just name image
-  //   params.append("id", form.getFieldValue("id"));
-
-  //   if (item.image_default && item.image_default.file.status === "removed") {
-  //     params.append("image_remove", "1");
-  //   } else {
-  //     params.append(
-  //       "upload_image",
-  //       item.image_default.file?.originFileObj,
-  //       item.image_default.file.originFileObj.name
-  //     );
-  //     // console.log("Image not provided or file structure is invalid");
-  //   }
-  //   if (item.image_optional) {
-  //     // console.log(item.image_optional);
-  //     item.image_optional.fileList?.map((items, index) => {
-  //       params.append(
-  //         "upload_image_optional",
-  //         items.originFileObj,
-  //         items.name
-  //       );
-  //     });
-  //   }
-  //   // return;
-
-  //   try {
-  //     var method = "post";
-  //     if (form.getFieldValue("id")) {
-  //       method = "put";
-  //     }
-  //     const res = await request("product", method, params);
-  //     if (res && !res.error) {
-  //       message.success(res.message);
-  //       oncloseModule();
-  //       // getlist();
-  //     } else {
-  //       message.error(res.error?.barcode);
-  //     }
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.error("Request failed", error);
-  //   }
-  // };
 
   const onFinish = async (item) => {
-    // Log the item to inspect its structure
-    console.log(item); // Debugging: Log the entire item object
+    // console.log({
+    //   ...item,
+    //   id: form.getFieldValue("id"),
+    //   image: form.getFieldValue("image"),
+    // });
+    //   return;
+    // id	category_id	barcode	name	brand	description	qty	price	discount	status	image	create_by	create_at
 
     const params = new FormData();
     params.append("name", item.name);
     params.append("category_id", item.category_id);
-    params.append("barcode", item.barcode);
+    params.append("barcode", item.barcode); //item.barcode
     params.append("brand", item.brand);
     params.append("description", item.description);
     params.append("qty", item.qty);
@@ -309,54 +195,19 @@ export default function ProductPage() {
     params.append("discount", item.discount);
     params.append("status", item.status);
 
-    // When updating, we use the key
-    params.append("image", form.getFieldValue("image")); // Just name image
+    //when update ,we use to key
+    params.append("image", form.getFieldValue("image")); // just name image
     params.append("id", form.getFieldValue("id"));
-    params.append("product_image", form.getFieldValue("product_image"));
-    console.log("product_image : ", form.getFieldValue("product_image"));
 
-    // Append images to "image_lt" array in FormData
-
-    // Check if image_default exists and has a file property
-    if (item.image_default && item.image_default.file) {
-      if (item.image_default.file.status === "removed") {
-        params.append("image_remove", "1");
-      } else {
-        params.append(
-          "upload_image",
-          item.image_default.file.originFileObj,
-          item.image_default.file.originFileObj.name
-        );
-      }
+    if (item.image_default && item.image_default.file.status === "removed") {
+      params.append("image_remove", "1");
     } else {
-      console.error(
-        "Image default is not provided or file structure is invalid"
+      params.append(
+        "upload_image",
+        item.image_default.file.originFileObj,
+        item.image_default.file.originFileObj.name
       );
-    }
-
-    // Check if image_optional exists and has fileList
-    if (item.image_optional && item.image_optional.fileList) {
-      item.image_optional.fileList.forEach((files) => {
-        if (files.originFileObj) {
-          params.append(
-            "upload_image_optional",
-            files.originFileObj,
-            files.name
-          );
-        } else {
-          console.error("Origin file object is missing in image optional");
-        }
-      });
-    } else {
-      console.error("Image optional is not provided or fileList is invalid");
-    }
-
-    if (item.image_optional && item.image_optional.file) {
-      const { file } = item.image_optional;
-      if (file.status === "removed") {
-        params.append("remove_image_optional", file.name);
-        console.log("remove_image_optional", file.name);
-      }
+      // console.log("Image not provided or file structure is invalid");
     }
 
     try {
@@ -377,6 +228,68 @@ export default function ProductPage() {
       console.error("Request failed", error);
     }
   };
+  
+  
+  // const onFinish = async (item) => {
+  //   const params = new FormData();
+
+  //   // Adding product details to params
+  //   params.append("name", item.name);
+  //   params.append("category_id", item.category_id);
+  //   params.append("barcode", item.barcode);
+  //   params.append("brand", item.brand);
+  //   params.append("description", item.description);
+  //   params.append("qty", item.qty);
+  //   params.append("price", item.price);
+  //   params.append("discount", item.discount);
+  //   params.append("status", item.status);
+
+  //   // Set image and id parameters
+  //   params.append("image", form.getFieldValue("image")); // Just the name of the image
+  //   params.append("id", form.getFieldValue("id"));
+
+  //   // Check if image_default exists and handle accordingly
+  //   if (item.image_default) {
+  //     if (
+  //       item.image_default.file &&
+  //       item.image_default.file.status === "removed"
+  //     ) {
+  //       params.append("image_remove", "1");
+  //     } else if (
+  //       item.image_default.file &&
+  //       item.image_default.file.originFileObj
+  //     ) {
+  //       // If image is uploaded, append the file object
+  //       params.append(
+  //         "upload_image",
+  //         item.image_default.file.originFileObj,
+  //         item.image_default.file.originFileObj.name
+  //       );
+  //     }
+  //   } else {
+  //     console.warn("image_default is undefined or null");
+  //   }
+
+  //   try {
+  //     var method = "post";
+  //     if (form.getFieldValue("id")) {
+  //       method = "put";
+  //     }
+  //     const res = await request("product", method, params);
+
+  //     if (res && !res.error) {
+  //       message.success(res.message);
+  //       oncloseModule();
+  //       // getlist();
+  //     } else {
+  //       message.error(res.error?.barcode);
+  //     }
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.error("Request failed", error);
+  //   }
+  // };
+
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -613,7 +526,7 @@ export default function ProductPage() {
                 // options.onProgress({ percent: 100 });
               }}
               multiple={true}
-              maxCount={4}
+              maxCount={5}
               listType="picture-card"
               fileList={imageOptional}
               onPreview={handlePreview}
@@ -687,104 +600,32 @@ export default function ProductPage() {
           },
           // {
           //   title: "image",
-          //   dataIndex: "product_image",
-          //   key: "product_image",
+          //   dataIndex: "image",
+          //   key: "image",
           // },
-          
-          {
-            title: "Images",
-            dataIndex: "product_image", // Ensure this matches your data structure
-            key: "product_image",
-            render: (images) => {
-              // If images is a single string, wrap it in an array
-              const imageArray = Array.isArray(images) ? images : [images];
-
-              return (
-                <div
-                  style={{
-                    width: "150px",
-                    height: "100px",
-                    overflow: "hidden",
-                  }}
-                >
-                  {imageArray && imageArray.length > 0 ? (
-                    <Carousel
-                      autoplaySpeed={4000}
-                      arrows
-              
-                      waitForAnimate={true}
-                      autoplay
-                    >
-                      {imageArray.map((image, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            // position: "relative",
-                            height: "150px",
-                            width: "100px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundImage: `url(http://localhost/fullstack/image_cspuhav/${image})`,
-                              width: "150px",
-                              height: "100px",
-                              backgroundSize: "cover",
-                              borderRadius: "10px", // Optional: Add border radius for aesthetics
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </Carousel>
-                  ) : (
-                    <div
-                      style={{
-                        backgroundColor: "gray",
-                        width: "150px",
-                        height: "100px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 10,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <MdImageNotSupported style={{ fontSize: 70 }} />
-                    </div>
-                  )}
-                </div>
-              );
-            },
-          },
           {
             title: "image",
             dataIndex: "image",
             // key: "image",
             render: (value) =>
               value ? (
-                <div
+                <Image
+                className="image_product"
                   style={{
-                    width: "150px",
-                    height: "100px",
+                    // borderRadius: 5,
+                    width: 70,
+                    height: 70,
                     objectFit: "cover",
+                    
                   }}
-                  className="hover-image"
-                >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    src={"http://localhost/fullstack/image_cspuhav/" + value}
-                  />
-                </div>
+                  src={"http://localhost/fullstack/image_cspuhav/" + value}
+                />
               ) : (
                 <div
                   style={{
                     backgroundColor: "gray",
-                    height: "150px",
-                    width: "100px",
+                    width: 70,
+                    height: 70,
                     objectFit: "cover",
                     display: "flex",
                     justifyContent: "center",

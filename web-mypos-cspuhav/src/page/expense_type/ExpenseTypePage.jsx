@@ -3,28 +3,14 @@ import moment from "moment";
 import { formatDateClient, formatDateServer, request } from "../../util/helper";
 import "react-slideshow-image/dist/styles.css"; // Import Slider from react-slick
 import "./style.css";
-import {
-  Space,
-  Table,
-  Tag,
-  Button,
-  Modal,
-  Input,
-  Form,
-  Select,
-  message,
-  InputNumber,
-  Col,
-  Row,
-  DatePicker,
-} from "antd";
+import { Space, Table, Button, Modal, Input, Form, message } from "antd";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import { configs } from "../../util/config";
 
-export default function CustomerPage() {
+export default function ExpenseTypePage() {
   //   const { category } = configStore().config;
   //   const {category,role}=config;
 
@@ -53,7 +39,7 @@ export default function CustomerPage() {
       };
 
       // Make the API request
-      const res = await request("customer", "get", param);
+      const res = await request("expense_type", "get", param);
 
       // Check if the response is structured as expected and contains the 'list' property
       if (res && res.list && Array.isArray(res.list)) {
@@ -81,14 +67,11 @@ export default function CustomerPage() {
   };
 
   const onClickEdit = async (data) => {
-    const { id, name, tel, email, address, type } = data;
+    const { id, name, code } = data;
     form.setFieldsValue({
       id,
       name,
-      tel,
-      email,
-      address,
-      type,
+      code,
     });
 
     setState((prevState) => ({
@@ -103,7 +86,7 @@ export default function CustomerPage() {
       title: "Remove data",
       content: "Are you to remove ?",
       onOk: async () => {
-        const res = await request("customer", "delete", data);
+        const res = await request("expense_type", "delete", data);
         if (res && !res.error) {
           message.success(res.message);
           getlist();
@@ -127,29 +110,34 @@ export default function CustomerPage() {
     getlist();
     form.resetFields();
   };
-
   const btnFilter = () => {
     getlist();
   };
 
   const onFinish = async (item) => {
-    console.log(item);
+    console.log(item); // Debugging: Log the entire item object
+
     var params = {
       ...item,
       id: form.getFieldValue("id"),
     };
 
     try {
-      var method = form.getFieldValue("id") ? "put" : "post";
-      const res = await request("customer", method, params); // Change to "customer"
+      var method = form.getFieldValue("id") ? "put" : "post"; // Use ternary for cleaner code
+      const res = await request("expense_type", method, params);
 
       if (res && !res.error) {
         message.success(res.message);
         oncloseModule();
+        // getlist(); // Uncomment if you want to refresh the list
+      } else {
+        console.error(res.error); // Log the entire error for debugging
+        message.error(res.error?.barcode || "An error occurred"); // Fallback error message
       }
+
+      console.log(res);
     } catch (error) {
-      console.error("Request failed:", error);
-      message.error("An unexpected error occurred.");
+      console.error("Request failed", error);
     }
   };
 
@@ -163,8 +151,9 @@ export default function CustomerPage() {
         }}
       >
         <Space>
-          <div>Employee</div>
+          <div>Expense type</div>
           <Input.Search
+            onSearch={getlist}
             allowClear
             onChange={(event) =>
               setFilter((p) => ({
@@ -192,74 +181,34 @@ export default function CustomerPage() {
         width={600}
       >
         <Form layout="vertical" onFinish={onFinish} form={form}>
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input name",
-                  },
-                ]}
-                name={"name"}
-                label="Name"
-              >
-                <Input placeholder="Name" />
-              </Form.Item>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select Card id",
-                  },
-                ]}
-                name={"email"}
-                label="Email"
-              >
-                <Input placeholder="Email" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select tel",
-                  },
-                ]}
-                name={"tel"}
-                label="Tel"
-              >
-                <Input placeholder="Tel" />
-              </Form.Item>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input type",
-                  },
-                ]}
-                name={"type"}
-                label="Type"
-              >
-                <Input placeholder="Type" />
-              </Form.Item>
-            </Col>
-          </Row>
+          {/* id name code create_by create_at */}
           <Form.Item
             rules={[
               {
                 required: true,
-                message: "Please input address",
+                message: "Please input name",
               },
             ]}
-            name={"address"}
-            label="Address"
+            name={"name"}
+            label="Name"
           >
-            <Input.TextArea placeholder="Address" />
+            <Input placeholder="Name" />
           </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please input code",
+              },
+            ]}
+            name={"code"}
+            label="Code"
+          >
+            <Input placeholder="Code" />
+          </Form.Item>
+
           <Space>
-            <Button onClick={oncloseModule}>Cacel</Button>
+            <Button onClick={oncloseModule}>Cancel</Button>
             <Button htmlType="submit" type="primary">
               {form.getFieldValue("id") ? "Update" : "Save"}
             </Button>
@@ -276,34 +225,19 @@ export default function CustomerPage() {
             render: (item, data, index) => index + 1,
           },
           {
-            title: "name",
+            title: "Name",
             dataIndex: "name",
             key: "name",
           },
           {
-            title: "Tel",
-            dataIndex: "tel",
-            key: "tel",
+            title: "Code",
+            dataIndex: "code",
+            key: "code",
           },
           {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
-          },
-          {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
-          },
-          {
-            title: "Create by",
+            title: "create_by",
             dataIndex: "create_by",
             key: "create_by",
-          },
-          {
-            title: "Address",
-            dataIndex: "address",
-            key: "address",
           },
           {
             title: "Action",
@@ -321,7 +255,7 @@ export default function CustomerPage() {
                   type="primary"
                   danger
                   icon={<MdDelete />}
-                  onClick={() => onClickDelete(item, index)}
+                  onClick={() => onClickDelete(data, index)}
                 ></Button>
               </Space>
             ),

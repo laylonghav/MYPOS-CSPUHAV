@@ -119,21 +119,21 @@ const items = [
     ],
   },
   {
-    key: "expanse",
+    key: "expense",
     icon: <ShoppingOutlined />,
-    label: "Expanse",
+    label: "Expense",
     children: [
       {
-        key: "expanse_type",
+        key: "expense_type",
         icon: <ShoppingOutlined />,
         children: null,
-        label: "Expanse Type",
+        label: "Expense Type",
       },
       {
-        key: "expanse",
+        key: "expense",
         icon: <ShoppingOutlined />,
         children: null,
-        label: "Expanse",
+        label: "Expense",
       },
     ],
   },

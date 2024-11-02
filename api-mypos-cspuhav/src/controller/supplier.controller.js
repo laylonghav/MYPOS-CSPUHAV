@@ -1,11 +1,12 @@
-const { db, logError } = require("../util/helper");
+const { db, logError, isEmpty } = require("../util/helper");
+
 
 exports.getlist = async (req, res) => {
   try {
-    var txtsearch = req.query.txtsearch;
-    var sql = "SELECT * FROM `supplier` ORDER BY id DESC";
+    const {txtsearch} = req.query; // Extract the 'name' parameter from the query string
+    let sql = "SELECT * FROM `supplier` ORDER BY id DESC";
 
-    if (txtsearch != "") {
+    if (txtsearch) {
       sql =
         "SELECT * FROM `supplier` WHERE name LIKE :txtsearch ORDER BY id DESC";
     }
@@ -13,14 +14,16 @@ exports.getlist = async (req, res) => {
     const [data] = await db.query(sql, {
       txtsearch: `%${txtsearch}%`,
     });
+
     res.json({
       I_know_you_are_ID: req.current_id,
-      list: data, // Use 'data' here instead of 'list'
+      list: data,
     });
   } catch (error) {
     logError("supplier.getlist", error, res);
   }
 };
+
 
 exports.create = async (req, res) => {
   try {

@@ -13,10 +13,10 @@ import {
   Form,
   Select,
   message,
-  InputNumber,
   Col,
   Row,
   DatePicker,
+  InputNumber,
 } from "antd";
 import { MdAdd, MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
@@ -24,7 +24,7 @@ import MainPage from "../../component/layout/MainPage";
 import { configStore } from "../../store/configStore";
 import { configs } from "../../util/config";
 
-export default function CustomerPage() {
+export default function ExpensePage() {
   //   const { category } = configStore().config;
   //   const {category,role}=config;
 
@@ -43,6 +43,7 @@ export default function CustomerPage() {
   // State to manage the filter values
   const [filter, setFilter] = useState({
     txtsearch: "",
+    expense_type: "",
   });
 
   // Function to fetch the list based on the filter
@@ -50,10 +51,11 @@ export default function CustomerPage() {
     try {
       const param = {
         txtsearch: filter.txtsearch,
+        expense_type: filter.expense_type,
       };
 
       // Make the API request
-      const res = await request("customer", "get", param);
+      const res = await request("expense", "get", param);
 
       // Check if the response is structured as expected and contains the 'list' property
       if (res && res.list && Array.isArray(res.list)) {
@@ -81,14 +83,23 @@ export default function CustomerPage() {
   };
 
   const onClickEdit = async (data) => {
-    const { id, name, tel, email, address, type } = data;
+    const { id, expense_type_id, ref_no, name, amount, remark, expense_date } =
+      data;
+
+    // Check if dob is a valid date
+    const formatted_expense_date = expense_date ? moment(expense_date) : null; // Ensure expense_date is parsed correctly
+    if (formatted_expense_date && !formatted_expense_date.isValid()) {
+      console.error("Invalid date:", expense_date);
+    }
+
     form.setFieldsValue({
       id,
+      expense_type_id,
+      ref_no,
       name,
-      tel,
-      email,
-      address,
-      type,
+      amount,
+      remark,
+      expense_date: formatted_expense_date,
     });
 
     setState((prevState) => ({
@@ -103,7 +114,7 @@ export default function CustomerPage() {
       title: "Remove data",
       content: "Are you to remove ?",
       onOk: async () => {
-        const res = await request("customer", "delete", data);
+        const res = await request("expense", "delete", data);
         if (res && !res.error) {
           message.success(res.message);
           getlist();
@@ -113,10 +124,14 @@ export default function CustomerPage() {
   };
 
   const onClickNew = async () => {
-    setState((p) => ({
-      ...p,
-      visibleModule: true,
-    }));
+    const res = await request("newRef_no", "post");
+    if (res && !res.error) {
+      form.setFieldValue("ref_no", res.ref_no);
+      setState((p) => ({
+        ...p,
+        visibleModule: true,
+      }));
+    }
   };
 
   const oncloseModule = () => {
@@ -127,29 +142,45 @@ export default function CustomerPage() {
     getlist();
     form.resetFields();
   };
-
   const btnFilter = () => {
     getlist();
   };
 
   const onFinish = async (item) => {
-    console.log(item);
+    console.log(item); // Debugging: Log the entire item object
+
+    // Ensure necessary fields are present
+    if (!item.expense_date) {
+      message.error("Expense date is required");
+      return;
+    }
+    //  id	expense_type_id	ref_no	name	amount	remark	expense_date
     var params = {
-      ...item,
       id: form.getFieldValue("id"),
+      expense_type_id: item.expense_type_id,
+      ref_no: item.ref_no,
+      name: item.name,
+      amount: item.amount,
+      remark: item.remark,
+      expense_date: formatDateServer(item.expense_date),
     };
 
     try {
       var method = form.getFieldValue("id") ? "put" : "post";
-      const res = await request("customer", method, params); // Change to "customer"
+      const res = await request("expense", method, params);
 
       if (res && !res.error) {
         message.success(res.message);
         oncloseModule();
+        // getlist(); // Uncomment if you want to refresh the list
+      } else {
+        console.error(res.error); // Log the entire error for debugging
+        message.error(res.error?.ref_no || "An error occurred"); // Fallback error message
       }
+
+      console.log(res);
     } catch (error) {
-      console.error("Request failed:", error);
-      message.error("An unexpected error occurred.");
+      console.error("Request failed", error);
     }
   };
 
@@ -163,7 +194,7 @@ export default function CustomerPage() {
         }}
       >
         <Space>
-          <div>Employee</div>
+          <div>Expense type</div>
           <Input.Search
             allowClear
             onChange={(event) =>
@@ -173,6 +204,18 @@ export default function CustomerPage() {
               }))
             }
             placeholder="Search"
+          />
+          <Select
+            style={{ width: 200 }}
+            placeholder="Expense type"
+            allowClear
+            options={config.expense_type}
+            onChange={(id) => {
+              setFilter((p) => ({
+                ...p,
+                expense_type: id,
+              }));
+            }}
           />
           <Button onClick={btnFilter} type="primary">
             Filter
@@ -192,71 +235,81 @@ export default function CustomerPage() {
         width={600}
       >
         <Form layout="vertical" onFinish={onFinish} form={form}>
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input name",
-                  },
-                ]}
-                name={"name"}
-                label="Name"
-              >
-                <Input placeholder="Name" />
-              </Form.Item>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select Card id",
-                  },
-                ]}
-                name={"email"}
-                label="Email"
-              >
-                <Input placeholder="Email" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select tel",
-                  },
-                ]}
-                name={"tel"}
-                label="Tel"
-              >
-                <Input placeholder="Tel" />
-              </Form.Item>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input type",
-                  },
-                ]}
-                name={"type"}
-                label="Type"
-              >
-                <Input placeholder="Type" />
-              </Form.Item>
-            </Col>
-          </Row>
+          {/* id expense_type_id ref_no name amount remark expense_date */}
           <Form.Item
             rules={[
               {
                 required: true,
-                message: "Please input address",
+                message: "Please input name",
               },
             ]}
-            name={"address"}
-            label="Address"
+            name={"name"}
+            label="Name"
           >
-            <Input.TextArea placeholder="Address" />
+            <Input placeholder="Name" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please input ref_no",
+              },
+            ]}
+            name={"ref_no"}
+            label="Reference Number"
+          >
+            <Input disabled placeholder="Ref no" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please select expense type",
+              },
+            ]}
+            name={"expense_type_id"}
+            label="Expense type"
+          >
+            <Select
+              placeholder="Select expense type"
+              options={config.expense_type}
+            />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please input amount",
+              },
+            ]}
+            name={"amount"}
+            label="Amount"
+          >
+            <InputNumber style={{ width: "100%" }} placeholder="Amount" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please select remark",
+              },
+            ]}
+            name={"remark"}
+            label="Remark"
+          >
+            <Input placeholder="Remark" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please input expense date",
+              },
+            ]}
+            name={"expense_date"}
+            label="Expense date"
+          >
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
           <Space>
             <Button onClick={oncloseModule}>Cacel</Button>
@@ -276,34 +329,41 @@ export default function CustomerPage() {
             render: (item, data, index) => index + 1,
           },
           {
-            title: "name",
+            title: "Name",
             dataIndex: "name",
             key: "name",
           },
           {
-            title: "Tel",
-            dataIndex: "tel",
-            key: "tel",
+            title: "Expense type",
+            dataIndex: "expense_name",
+            key: "expense_name",
           },
           {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Reference Number",
+            dataIndex: "ref_no",
+            key: "ref_no",
           },
           {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
+            title: "Amount",
+            dataIndex: "amount",
+            key: "amount",
+          },
+          {
+            title: "Remark",
+            dataIndex: "remark",
+            key: "remark",
+          },
+
+          {
+            title: "Expense date",
+            dataIndex: "expense_date",
+            key: "expense_date",
+            render: (value) => formatDateClient(value),
           },
           {
             title: "Create by",
             dataIndex: "create_by",
             key: "create_by",
-          },
-          {
-            title: "Address",
-            dataIndex: "address",
-            key: "address",
           },
           {
             title: "Action",
@@ -321,7 +381,7 @@ export default function CustomerPage() {
                   type="primary"
                   danger
                   icon={<MdDelete />}
-                  onClick={() => onClickDelete(item, index)}
+                  onClick={() => onClickDelete(data, index)}
                 ></Button>
               </Space>
             ),

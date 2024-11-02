@@ -4,9 +4,8 @@ const {
   create,
   update,
   remove,
-  productImage,
   newbarcode,
-} = require("../controller/product.controller");
+} = require("../controller/product.controller_single_image");
 const { uploadFile } = require("../util/helper");
 
 module.exports = (app) => {
@@ -14,22 +13,15 @@ module.exports = (app) => {
   app.post(
     "/api/product",
     validate_token(),
-    uploadFile.fields([
-      { name: "upload_image", maxCount: 1 },
-      { name: "upload_image_optional", maxCount: 4 },
-    ]),
+    uploadFile.single("upload_image"),
     create
   );
   app.put(
     "/api/product",
     validate_token(),
-    uploadFile.fields([
-      { name: "upload_image", maxCount: 1 },
-      { name: "upload_image_optional", maxCount: 4 },
-    ]),
+    uploadFile.single("upload_image"),
     update
   );
   app.post("/api/new_barcode", newbarcode);
   app.delete("/api/product", remove);
-  app.get("/api/product_image/:product_id", productImage);
 };

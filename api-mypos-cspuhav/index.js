@@ -1,3 +1,4 @@
+
 const express = require("express"); // import express module
 const app = express(); // app exttend
 const cors = require("cors");
@@ -56,6 +57,10 @@ require("./src/route/role.route")(app);
 require("./src/route/supplier.route")(app);
 require("./src/route/config.route")(app);
 require("./src/route/product.route")(app);
+require("./src/route/employee.route")(app);
+require("./src/route/customer.route")(app);
+require("./src/route/expense.route")(app);
+require("./src/route/expense_type.route")(app);
 
 const PORT = 8081;
 app.listen(PORT, () => {

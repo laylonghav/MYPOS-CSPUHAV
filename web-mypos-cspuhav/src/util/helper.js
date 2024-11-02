@@ -1,7 +1,8 @@
 import axios from "axios";
-import { config } from "./config";
+import { configs } from "./config";
 import { setServerStatus } from "../store/server.store";
 import { getAccessToken } from "../store/profile.store";
+import dayjs from "dayjs";
 
 export const request = (url = "", method = "get", data = {}) => {
   var access_token = getAccessToken();
@@ -13,8 +14,29 @@ export const request = (url = "", method = "get", data = {}) => {
     // check if param data is FormData
     headers = { "Content-Type": "multipart/form-data" };
   }
+  // var param_query = "";
+  // if (method == "get" && data instanceof Object) {
+  //   // product?txtsearch=pp&brand:conoy
+  //   Object.keys(data).map((key, index) => {
+  //     // console.log("key ",key);
+  //     console.log("index ",index);
+  //     // console.log("key ",data[key]);
+  //     param_query += (index == 0 ? "?" : "&") + key +"="+ data[key];
+  //   });
+  // }
+
+  var param_query = "?";
+  if (method === "get" && data instanceof Object) {
+    Object.keys(data).map((key, index) => {
+      if (data[key]) {
+        // Ensure the value is valid
+        param_query += "&" + key + "=" + data[key];
+      }
+    });
+  }
+
   return axios({
-    url: config.base_url + url,
+    url: configs.base_url + url + param_query,
     method: method,
     data: data,
     headers: {
@@ -54,4 +76,15 @@ export const request = (url = "", method = "get", data = {}) => {
     .finally(() => {
       console.log("Request process finalized.");
     });
+};
+
+
+export const formatDateClient = (date, format = "DD/MM/YYYY") => {
+  if (date) return dayjs(date).format(format);
+  return null;
+};
+
+export const formatDateServer = (date, format = "YYYY-MM-DD") => {
+  if (date) return dayjs(date).format(format);
+  return null;
 };

@@ -10,7 +10,12 @@ exports.getlist = async (req, res) => {
     const [category] = await db.query(
       "select id as value, name as label,description from category"
     );
-    const [role] = await db.query("select id,name,code from role");
+    const [role] = await db.query(
+      "select id as value,name as label,code from role"
+    );
+    const [expense_type] = await db.query(
+      "select id as value,name as label,code from expense_type"
+    );
     const [supplier] = await db.query("select id,name,code from supplier");
 
     const purchase_status = [
@@ -51,6 +56,7 @@ exports.getlist = async (req, res) => {
       product,
       purchase_status,
       brand,
+      expense_type,
     });
   } catch (error) {
     logError("config.getlist", error, res);

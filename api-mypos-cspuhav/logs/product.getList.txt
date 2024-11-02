@@ -1,0 +1,48 @@
+[28/10/2024 13:06:13] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:23] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:24] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:29] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:30] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:34] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:58] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 13:06:58] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'pi.id AS product_image_id
+      FROM product p
+      INNER JOIN category c 
+ ...' at line 4
+[28/10/2024 20:02:41] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'order o
+        ON o.product_id = p.id
+      WHERE 1' at line 11
+[28/10/2024 20:02:41] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'order o
+        ON o.product_id = p.id
+      WHERE 1' at line 11
+[31/10/2024 13:27:28] Error
+[31/10/2024 13:27:28] Error

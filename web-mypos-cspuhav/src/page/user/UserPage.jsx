@@ -48,6 +48,7 @@ export default function UserPage() {
   const onClickEdite = (item) => {
     form.setFieldsValue({
       // ...item,
+      id: item.id,
       name: item.name,
       username: item.username,
       password: item.password,
@@ -128,6 +129,7 @@ export default function UserPage() {
           New
         </Button>
       </div>
+      {/* <h1>{form.getFieldValue("id")}</h1> */}
       <Table
         dataSource={state.list}
         columns={[
@@ -222,18 +224,24 @@ export default function UserPage() {
           >
             <Input placeholder="Username"></Input>
           </Form.Item>
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Please input password",
-              },
-            ]}
-            name="password"
-            label="Password"
-          >
-            <Input.Password placeholder="Password"></Input.Password>
-          </Form.Item>
+          {form.getFieldValue(
+            "id"
+          ) ? // If there is an id, do nothing or render null
+          null : ( // or false if you want to explicitly indicate nothing should be rendered
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Please input password",
+                },
+              ]}
+              name="password"
+              label="Password"
+            >
+              <Input.Password placeholder="Password" />
+            </Form.Item>
+          )}
+
           <Form.Item
             rules={[
               {
