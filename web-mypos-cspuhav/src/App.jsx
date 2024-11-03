@@ -18,6 +18,8 @@ import SupplierPage from "./page/supplier/SupplierPage";
 import ProductPage from "./page/product/ProductPage";
 import ExpensePage from "./page/expense/ExpensePage";
 import ExpenseTypePage from "./page/expense_type/ExpenseTypePage";
+import PurchasePage from "./page/purchase/PurchasePage";
+import PurchaseProductPage from "./page/purchase_product/PurchaseProductPage";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path="/product" element={<ProductPage />} />
           <Route path="/expense" element={<ExpensePage />} />
           <Route path="/expense_type" element={<ExpenseTypePage />} />
+          <Route path="/purchase" element={<PurchasePage />} />
+          <Route path="/purchase_product" element={<PurchaseProductPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

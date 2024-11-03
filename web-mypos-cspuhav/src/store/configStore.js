@@ -8,7 +8,8 @@ export const configStore = create((set) => ({
     product: null,
     purchase_status: null,
     brand: null,
-    expense_type: null,
+    brand: null,
+    Purchase: null,
   },
   setconfig: (params) =>
     set((state) => ({

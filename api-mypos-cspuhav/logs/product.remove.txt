@@ -11,3 +11,5 @@
 [26/10/2024 22:42:39] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`product_image`, CONSTRAINT `product_image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`))
 [26/10/2024 22:46:31] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`product_image`, CONSTRAINT `product_image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`))
 [26/10/2024 22:46:47] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`product_image`, CONSTRAINT `product_image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`))
+[03/11/2024 17:48:20] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`purchase_product`, CONSTRAINT `purchase_product_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`))
+[03/11/2024 17:48:25] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`purchase_product`, CONSTRAINT `purchase_product_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`))

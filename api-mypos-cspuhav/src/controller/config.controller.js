@@ -5,7 +5,9 @@ exports.getlist = async (req, res) => {
     // const [category] = await db.query("SELECT * FROM `category`");
     // const [role] = await db.query("SELECT * FROM `role`");
     // const [supplier] = await db.query("SELECT * FROM `supplier`");
-    const [product] = await db.query("SELECT * FROM `product`");
+    const [product] = await db.query(
+      "SELECT `id` AS value, `category_id`, `barcode`, `name` AS label, `brand`, `description`, `qty`, `price`, `discount`, `status`, `image`, `create_by`, `create_at` FROM `product`"
+    );
 
     const [category] = await db.query(
       "select id as value, name as label,description from category"
@@ -16,7 +18,28 @@ exports.getlist = async (req, res) => {
     const [expense_type] = await db.query(
       "select id as value,name as label,code from expense_type"
     );
-    const [supplier] = await db.query("select id,name,code from supplier");
+    const [supplier] = await db.query(
+      "select id as value,name as label,code from supplier"
+    );
+    let sql = `
+  SELECT p.id AS value, 
+         p.supplier_id,  
+         p.ref AS label, 
+         p.ship_cost, 
+         p.paid_amount, 
+         p.paid_date, 
+         p.status, 
+         p.create_by, 
+         p.create_at, 
+         p.ship_company,      -- Add this line if ship_company exists in the purchase table
+         s.name AS supplier_name
+  FROM purchase p
+  INNER JOIN supplier s 
+    ON p.supplier_id = s.id
+  WHERE 1
+`;
+
+    const [Purchase] = await db.query(sql);
 
     const purchase_status = [
       {
@@ -34,6 +57,14 @@ exports.getlist = async (req, res) => {
       {
         value: "issues",
         label: "issues",
+      },
+      {
+        value: "Canceled",
+        label: "Canceled",
+      },
+      {
+        value: "Completed",
+        label: "Completed",
       },
     ];
 
@@ -57,6 +88,7 @@ exports.getlist = async (req, res) => {
       purchase_status,
       brand,
       expense_type,
+      Purchase,
     });
   } catch (error) {
     logError("config.getlist", error, res);

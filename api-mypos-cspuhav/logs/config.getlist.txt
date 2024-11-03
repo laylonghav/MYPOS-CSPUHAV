@@ -1,0 +1,6 @@
+[03/11/2024 12:44:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
+[03/11/2024 12:44:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
+[03/11/2024 12:44:48] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
+[03/11/2024 12:44:48] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
+[03/11/2024 12:46:29] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
+[03/11/2024 12:46:29] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'selectid as value,name as label,code from supplier' at line 1
