@@ -49,7 +49,10 @@ export default function ProductPage() {
     visibleModule: false,
     list: [],
     image: [],
+    total: [],
   });
+
+  const refPage = React.useRef(1);
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -63,6 +66,7 @@ export default function ProductPage() {
   const [previewImage, setPreviewImage] = useState("");
   const [imageDefault, setImageDefault] = useState([]);
   const [imageOptional, setImageOptional] = useState([]);
+  const [imageOptional_Old, setImageOptional_Old] = useState([]);
 
   useEffect(() => {
     getlist();
@@ -103,10 +107,13 @@ export default function ProductPage() {
   const getlist = async () => {
     try {
       // Construct the parameters for the request based on the filter
-      const param = {
-        txtsearch: filter.txtsearch,
-        category_id: filter.category_id,
-        brand: filter.brand,
+      var param = {
+        ...filter,
+        page: refPage.current, // get value
+        // txt_search: filter.txt_search,
+        // category_id: filter.category_id,
+        // brand: filter.brand,
+        // page: filter.page,
       };
 
       // Make the API request
@@ -117,10 +124,17 @@ export default function ProductPage() {
         console.log(res.list); // Log the correct variable 'res.list'
 
         // Update the state with the fetched list
+        // setState((pre) => ({
+        //   ...pre,
+        //   list: res.list,
+        //   image: res.products,
+        //   total: res.total,
+        // }));
+
         setState((pre) => ({
           ...pre,
           list: res.list,
-          image: res.products,
+          total: refPage.current === 1 ? res.total : pre.total,
         }));
       } else {
         console.error("Unexpected response structure:", res); // Handle unexpected structure
@@ -177,6 +191,7 @@ export default function ProductPage() {
             url: configs.image_Path + item.image,
           }));
           setImageOptional(imageProductOptional);
+          setImageOptional_Old(imageProductOptional);
         } else {
           setImageOptional([]); // Clear if no optional images from response
         }
@@ -297,6 +312,26 @@ export default function ProductPage() {
   const onFinish = async (item) => {
     // Log the item to inspect its structure
     console.log(item); // Debugging: Log the entire item object
+    var imageoption = [];
+    if (imageOptional_Old.length > 0 && item.image_optional) {
+      imageOptional_Old.map((item1, index1) => {
+        var isfound = false;
+        if (item.image_optional && item.image_optional.fileList) {
+          item.image_optional.fileList.forEach((file) => {
+            if (item1.name === file.name) {
+              isfound = true;
+            }
+          });
+        }
+        if (isfound === false) {
+          imageoption.push(item1.name);
+        }
+        // imageoption.push({ ...item1, isfound: isfound });
+      });
+    }
+    // console.log(imageoption)
+
+    // return;
 
     const params = new FormData();
     params.append("name", item.name);
@@ -313,7 +348,16 @@ export default function ProductPage() {
     params.append("image", form.getFieldValue("image")); // Just name image
     params.append("id", form.getFieldValue("id"));
     params.append("product_image", form.getFieldValue("product_image"));
-    console.log("product_image : ", form.getFieldValue("product_image"));
+    if (imageoption && imageoption.length > 0) {
+      // image for remove
+      imageoption.map((item_image) => {
+        params.append("image_optional", item_image);
+        // console.log(item_image);
+      });
+    }
+
+    // return
+    // console.log("product_image : ", form.getFieldValue("product_image"));
 
     // Append images to "image_lt" array in FormData
 
@@ -351,13 +395,13 @@ export default function ProductPage() {
       console.error("Image optional is not provided or fileList is invalid");
     }
 
-    if (item.image_optional && item.image_optional.file) {
-      const { file } = item.image_optional;
-      if (file.status === "removed") {
-        params.append("remove_image_optional", file.name);
-        console.log("remove_image_optional", file.name);
-      }
-    }
+    // if (item.image_optional && item.image_optional.file) {
+    //   const { file } = item.image_optional;
+    //   if (file.status === "removed") {
+    //     params.append("remove_image_optional", file.name);
+    //     console.log("remove_image_optional", file.name);
+    //   }
+    // }
 
     try {
       var method = "post";
@@ -368,7 +412,7 @@ export default function ProductPage() {
       if (res && !res.error) {
         message.success(res.message);
         oncloseModule();
-        // getlist();
+        getlist();
       } else {
         message.error(res.error?.barcode);
       }
@@ -377,6 +421,100 @@ export default function ProductPage() {
       console.error("Request failed", error);
     }
   };
+
+  // const onFinish = async (item) => {
+  //   // Log the item to inspect its structure
+  //   console.log(item); // Debugging: Log the entire item object
+
+  //   // Collect images to remove
+  //   const imageoption = [];
+  //   if (
+  //     imageOptional_Old &&
+  //     imageOptional_Old.length > 0 &&
+  //     item.image_optional
+  //   ) {
+  //     imageOptional_Old.forEach((oldImage) => {
+  //       let isFound = false;
+  //       if (item.image_optional.fileList) {
+  //         item.image_optional.fileList.forEach((file) => {
+  //           if (oldImage.name === file.name) {
+  //             isFound = true;
+  //           }
+  //         });
+  //       }
+  //       if (!isFound) {
+  //         imageoption.push(oldImage.name);
+  //       }
+  //     });
+  //   }
+
+  //   const params = new FormData();
+  //   // Append basic product data
+  //   params.append("name", item.name);
+  //   params.append("category_id", item.category_id);
+  //   params.append("barcode", item.barcode);
+  //   params.append("brand", item.brand);
+  //   params.append("description", item.description);
+  //   params.append("qty", item.qty);
+  //   params.append("price", item.price);
+  //   params.append("discount", item.discount);
+  //   params.append("status", item.status);
+
+  //   // Handle primary image (existing or new upload)
+  //   params.append("image", form.getFieldValue("image"));
+  //   params.append("id", form.getFieldValue("id"));
+  //   params.append("product_image", form.getFieldValue("product_image"));
+
+  //   // Append images to remove if any
+  //   if (imageoption.length > 0) {
+  //     imageoption.forEach((imageName) => {
+  //       params.append("image_optional", imageName);
+  //     });
+  //   }
+
+  //   // Check and append the main image if provided
+  //   if (item.image_default && item.image_default.file) {
+  //     if (item.image_default.file.status === "removed") {
+  //       params.append("image_remove", "1");
+  //     } else {
+  //       params.append(
+  //         "upload_image",
+  //         item.image_default.file.originFileObj,
+  //         item.image_default.file.originFileObj.name
+  //       );
+  //     }
+  //   } else {
+  //     console.error("Image default is not provided or file structure is invalid");
+  //   }
+
+  //   // Append optional images if they exist
+  //   if (item.image_optional && item.image_optional.fileList) {
+  //     item.image_optional.fileList.forEach((file) => {
+  //       if (file.originFileObj) {
+  //         params.append("upload_image_optional", file.originFileObj, file.name);
+  //       } else {
+  //         console.error("Origin file object is missing in image optional");
+  //       }
+  //     });
+  //   } else {
+  //     console.error("Image optional is not provided or fileList is invalid");
+  //   }
+
+  //   try {
+  //     const method = form.getFieldValue("id") ? "put" : "post";
+  //     const res = await request("product", method, params);
+  //     if (res && !res.error) {
+  //       message.success(res.message);
+  //       oncloseModule();
+  //       getlist(); // Uncomment if needed to refresh the list
+  //     } else {
+  //       message.error(res.error?.barcode);
+  //     }
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.error("Request failed", error);
+  //   }
+  // };
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -401,7 +539,7 @@ export default function ProductPage() {
         className=""
       >
         <Space>
-          <div>Category</div>
+          <div>Category  {state.total}</div>
           <Input.Search
             allowClear
             onChange={(event) =>
@@ -633,6 +771,15 @@ export default function ProductPage() {
       </Modal>
       <Table
         dataSource={state.list}
+        pagination={{
+          pageSize: 5,
+          total: state.total,
+          onChange: (page) => {
+            // setFilter((pre) => ({ ...pre, page: page }));
+            refPage.current = page;
+            getlist();
+          },
+        }}
         columns={[
           {
             title: "No",
@@ -690,7 +837,7 @@ export default function ProductPage() {
           //   dataIndex: "product_image",
           //   key: "product_image",
           // },
-          
+
           {
             title: "Images",
             dataIndex: "product_image", // Ensure this matches your data structure
@@ -711,7 +858,6 @@ export default function ProductPage() {
                     <Carousel
                       autoplaySpeed={4000}
                       arrows
-              
                       waitForAnimate={true}
                       autoplay
                     >
@@ -783,8 +929,8 @@ export default function ProductPage() {
                 <div
                   style={{
                     backgroundColor: "gray",
-                    height: "150px",
-                    width: "100px",
+                    height: "100px",
+                    width: "150px",
                     objectFit: "cover",
                     display: "flex",
                     justifyContent: "center",

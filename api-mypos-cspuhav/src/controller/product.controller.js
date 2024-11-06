@@ -6,176 +6,51 @@ const {
   removeFile,
 } = require("../util/helper");
 
-// exports.getlist = async (req, res) => {
-//   try {
-//     // Destructuring req.body to get the parameters
-//     const { txtsearch, category_id, brand } = req.query; // Extract fields from req.body
-
-//     // console.log("body: ", req.body); // Log request body
-//     // console.log("query: ", req.query); // Log query parameters (for GET requests)
-
-//     // res.json({
-//     //   body: req.body, // Return the body as part of the response
-//     //   query: req.query, // Return the query as part of the response
-//     // });
-
-//     // return; // Ensure the function returns after sending the response
-//     // Creating an SQL query with proper spaces between sections
-
-//     // query:  { txtsearch: 'a', category_id: 'a', brand: 'a' }
-
-//     var sql = `
-//       SELECT p.*,
-//              c.name AS category_name
-//       FROM product p
-//       INNER JOIN category c
-//         ON p.category_id = c.id
-//       WHERE 1
-//     `;
-
-//     // Adding conditions dynamically based on the parameters received
-
-//     if (category_id) {
-//       sql += " AND p.category_id = :category_id";
-//     }
-//     if (txtsearch) {
-//       sql += " AND p.name LIKE :txtsearch OR p.barcode = :barcode";
-//     }
-//     if (brand) {
-//       sql += " AND p.brand = :brand";
-//     }
-
-//     // Executing the query with the parameters
-//     const [list] = await db.query(sql, {
-//       txtsearch: "%" + txtsearch + "%",
-//       category_id: category_id,
-//       barcode: txtsearch,
-//       brand: brand,
-//     });
-
-//     // Sending the response
-//     res.json({
-//       i_know_you_are_id: req.current_id,
-//       list: list,
-//     });
-//   } catch (error) {
-//     logError("product.getList", error, res);
-//   }
-// };
-
-// exports.create = async (req, res) => {
-//   try {
-//     if (await isExistBarcode(req.barcode)) {
-//       res.json({
-//         error: {
-//           barcode: "Barcode already exist.",
-//         },
-//       });
-//       return false;
-//     }
-//     // console.log(req.files)
-//     // res.json({
-//     //   body: req.body,
-//     //   file: req.files,
-//     //   message: "Insert success!",
-//     // });
-//     // return;
-
-//     var sql =
-//       " INSERT INTO product (category_id, barcode,name,brand,description,qty,price,discount,status,image,create_by ) " +
-//       " VALUES (:category_id, :barcode, :name, :brand, :description, :qty, :price, :discount, :status, :image, :create_by ) ";
-//     var [data] = await db.query(sql, {
-//       ...req.body,
-//       image: req.files?.upload_image[0].filename,
-//       create_by: req.auth?.name,
-//     });
-//     var paramImageProduct = [];
-//     if (req.files && req.files?.upload_image_optional) {
-//       req.files?.upload_image_optional.map((item, index) => {
-//         paramImageProduct.push([data.insertId, item.filename]);
-//       });
-//     }
-//     var sqlImageProduct =
-//       "INSERT INTO `product_image`(`id`, `product_id`, `image`) VALUES :data";
-//     var [dataImage] = await db.query(sqlImageProduct, {
-//       data: paramImageProduct
-//     });
-//     res.json({
-//       data,
-//       dataImage,
-//       message: "Insert success!",
-//     });
-//   } catch (error) {
-//     logError("product.create", error, res);
-//   }
-// };
 
 exports.getlist = async (req, res) => {
   try {
-    const { txtsearch, category_id, brand } = req.query;
-
-    // Base SQL query with joins to fetch products and associated category and images
-    let sql = `
-      SELECT p.*, 
+    var { txt_search, category_id, brand, page } = req.query;
+    const pageSize = 5; // fix
+    page = Number(page); // 1,2,3,4 from client
+    const offset = (page - 1) * pageSize; // find
+    var sqlSelect = `SELECT p.*, 
              c.name AS category_name,
              pi.image AS product_image,
-             pi.id AS product_image_id
-      FROM product p
+             pi.id AS product_image_id `;
+    var sqlJoin = `FROM product p
       INNER JOIN category c 
         ON p.category_id = c.id
       LEFT JOIN product_image pi
-        ON pi.product_id = p.id
-      WHERE 1 
-    `;
-
-    // Add conditions dynamically based on parameters
-    const queryParams = {};
-    if (category_id) {
-      sql += " AND p.category_id = :category_id";
-      queryParams.category_id = category_id;
+        ON pi.product_id = p.id `;
+    var sqlWhere = "WHERE true ";
+    if (txt_search) {
+      sqlWhere += " AND (p.name LIKE :txt_search OR p.barcode = :barcode) ";
     }
-    if (txtsearch) {
-      sql += " AND (p.name LIKE :txtsearch OR p.barcode = :barcode)";
-      queryParams.txtsearch = "%" + txtsearch + "%";
-      queryParams.barcode = txtsearch;
+    if (category_id) {
+      sqlWhere += " AND p.category_id = :category_id";
     }
     if (brand) {
-      sql += " AND p.brand = :brand";
-      queryParams.brand = brand;
+      sqlWhere += " AND p.brand = :brand";
     }
-
-    // Add ORDER BY clause to sort by product ID
-    sql += " ORDER BY id DESC";
-
-    // Execute the query with parameters
-    const [results] = await db.query(sql, queryParams);
-
-    // Transform results to group product images into an array
-    const list = [];
-    const productMap = new Map();
-
-    results.forEach((row) => {
-      const productId = row.id;
-
-      if (!productMap.has(productId)) {
-        productMap.set(productId, {
-          ...row,
-          product_image: [], // Initialize image array
-        });
-      }
-
-      // Push the image to the product_image array
-      if (row.product_image) {
-        productMap.get(productId).product_image.push(row.product_image);
-      }
-    });
-
-    // Convert the map to an array
-    productMap.forEach((product) => list.push(product));
-
+    var sqlLimit = " LIMIT " + pageSize + " OFFSET " + offset;
+    var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
+    var sqlparam = {
+      txt_search: "%" + txt_search + "%",
+      barcode: txt_search,
+      category_id,
+      brand,
+    };
+    const [list] = await db.query(sqlList, sqlparam);
+    var dataCount = 0;
+    if (page == 1) {
+      let sqlTotal = "SELECT COUNT(p.id) as total " + sqlJoin + sqlWhere;
+      var [dataCount] = await db.query(sqlTotal, sqlparam);
+      dataCount = dataCount[0].total;
+    }
+    // console.log(list)
     res.json({
-      i_know_you_are_id: req.current_id,
       list: list,
+      total: dataCount,
     });
   } catch (error) {
     logError("product.getList", error, res);
@@ -429,75 +304,90 @@ exports.create = async (req, res) => {
 // };
 exports.update = async (req, res) => {
   try {
-    const sql =
-      "UPDATE product SET category_id = :category_id, barcode = :barcode, name = :name," +
-      "brand = :brand, description = :description, qty = :qty, price = :price," +
-      "discount = :discount, status = :status, image = :image " +
-      "WHERE id = :id";
+    // Ensure spacing between each clause in SQL
+    var sql = `
+      UPDATE product SET 
+        category_id = :category_id, 
+        barcode = :barcode, 
+        name = :name, 
+        brand = :brand, 
+        description = :description, 
+        qty = :qty, 
+        price = :price, 
+        discount = :discount, 
+        status = :status, 
+        image = :image 
+      WHERE id = :id
+    `;
 
-    let filename = req.body.image; // Default to existing image
+    let filename = req.body.image;
 
-    if (!filename && req.files?.upload_image) {
-      filename = req.files.upload_image[0].filename;
+    // If a new image is uploaded, use its filename
+    if (req.files?.upload_image) {
+      filename = req.files.upload_image[0]?.filename;
     }
 
-    if (req.body.image && req.files?.upload_image) {
-      await removeFile(req.body.image).catch((err) =>
-        console.error("Error removing old image:", err)
-      );
-      filename = req.files.upload_image[0].filename;
+    // Check if image needs to be replaced
+    if (
+      req.body.image &&
+      req.body.image !== "null" &&
+      req.files?.upload_image
+    ) {
+      try {
+        await removeFile(req.body.image); // Remove old image
+      } catch (error) {
+        console.error(`Error deleting old image file: ${error.message}`);
+      }
+      filename = req.files.upload_image[0]?.filename;
     }
 
+    // Check if image should be removed
     if (req.body.image_remove === "1") {
-      await removeFile(req.body.image).catch((err) =>
-        console.error("Error removing image:", err)
-      );
+      try {
+        await removeFile(req.body.image); // Remove specified image
+      } catch (error) {
+        console.error(`Error deleting specified image file: ${error.message}`);
+      }
       filename = null;
     }
 
+    // Update product information in the database
     const [data] = await db.query(sql, {
       ...req.body,
-      image: filename,
+      image: filename == null ? "" : filename,
       create_by: req.auth?.name,
     });
 
+    // Insert new optional images into `product_image` table
     if (req.files?.upload_image_optional) {
-      const productId = req.body.id; // Use the ID from request body
-
-      for (const item of req.files.upload_image_optional) {
-        const imageFilename = item.filename;
-
-        const [existingImage] = await db.query(
-          "SELECT id, image FROM product_image WHERE product_id = :productId AND image = :image",
-          { productId, image: imageFilename }
-        );
-
-        if (existingImage.length > 0) {
-          await removeFile(existingImage[0].image).catch((err) =>
-            console.error("Error removing existing image:", err)
-          );
-          await db.query(
-            "UPDATE product_image SET image = :image WHERE id = :id",
-            { id: existingImage[0].id, image: imageFilename }
-          );
-        } else {
-          await db.query(
-            "INSERT INTO product_image (product_id, image) VALUES (:productId, :image)",
-            { productId, image: imageFilename }
-          );
-        }
-      }
+      const paramImageProduct = req.files.upload_image_optional.map((item) => [
+        req.body.id,
+        item.filename,
+      ]);
+      const sqlImageProduct =
+        "INSERT INTO product_image (product_id, image) VALUES ?";
+      await db.query(sqlImageProduct, [paramImageProduct]);
     }
 
-    
-    if (req.body.remove_image_optional) {
-      await db.query(
-        "DELETE FROM product_image WHERE product_id = :productId AND image = :image",
-        { productId: req.body.id, image: req.body.remove_image_optional }
-      );
-      await removeFile(req.body.remove_image_optional).catch((err) =>
-        console.error("Error removing product image file:", err)
-      );
+    // Remove optional images
+    if (req.body.image_optional && req.body.image_optional.length > 0) {
+      // Ensure `image_optional` is an array
+      if (typeof req.body.image_optional === "string") {
+        req.body.image_optional = [req.body.image_optional];
+      }
+
+      for (const item of req.body.image_optional) {
+        try {
+          // Remove image entry from database
+          await db.query("DELETE FROM product_image WHERE image = :image", {
+            image: item,
+          });
+          // Remove physical file
+          await removeFile(item);
+        } catch (error) {
+          console.error(`Error deleting optional image file: ${error.message}`);
+        }
+      }
     }
 
     res.json({
@@ -505,7 +395,7 @@ exports.update = async (req, res) => {
       message: "Data update success!",
     });
   } catch (error) {
-    logError("update.create", error, res);
+    console.error(`Error in product.update: ${error.message}`);
     res.status(500).json({ message: "An error occurred during the update." });
   }
 };
@@ -573,7 +463,6 @@ exports.productImage = async (req, res) => {
     logError("productImage.get", error, res);
   }
 };
-
 
 exports.newbarcode = async (req, res) => {
   try {

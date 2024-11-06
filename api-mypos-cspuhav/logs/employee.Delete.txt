@@ -1,2 +1,0 @@
-[01/11/2024 14:37:45] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ': role_id, ,`address`= 'BMC' ,`status`= 1 WHERE id=NULL' at line 1
-[01/11/2024 14:37:49] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ': role_id, ,`address`= 'BMC' ,`status`= 1 WHERE id=NULL' at line 1

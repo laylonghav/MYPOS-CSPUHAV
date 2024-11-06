@@ -1,3 +1,0 @@
-[09/10/2024 20:46:37] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':,create_by)' at line 1
-[09/10/2024 20:46:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':,create_by)' at line 1
-[09/10/2024 20:46:43] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':,create_by)' at line 1

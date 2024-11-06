@@ -1,4 +1,0 @@
-[02/11/2024 22:32:22] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(name LIKE '%o%' OR code LIKE '%o%' ) ORDER BY id DESC' at line 4
-[02/11/2024 22:32:23] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(name LIKE '%o%' OR code LIKE '%o%' ) ORDER BY id DESC' at line 4
-[02/11/2024 22:32:23] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(name LIKE '%o%' OR code LIKE '%o%' ) ORDER BY id DESC' at line 4
-[02/11/2024 22:32:33] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(name LIKE '%o%' OR code LIKE '%o%' ) ORDER BY id DESC' at line 4

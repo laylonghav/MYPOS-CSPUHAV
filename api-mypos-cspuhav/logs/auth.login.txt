@@ -1,6 +1,1 @@
-[05/09/2024 04:38:13] Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-[05/09/2024 04:48:38] Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-[05/09/2024 04:49:43] Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-[05/09/2024 04:53:52] Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-[05/09/2024 14:01:27] ReferenceError: Access_token is not defined
-[24/10/2024 12:35:01] Error: read ECONNRESET
+[06/11/2024 10:43:09] Error
