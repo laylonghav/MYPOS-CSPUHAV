@@ -3,9 +3,11 @@ import "./MainLayout.css";
 import logo from "../../assets/Image/Logo/Mylogo.png";
 import profile_image from "../../assets/Image/Logo/laylonghav.jpg";
 import React, { useEffect, useState } from "react";
-import { Input, Button, Dropdown, Space } from "antd";
+import { Input, Button, Dropdown, Space, Badge, Drawer, Empty, notification } from "antd";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import { PiShoppingCart } from "react-icons/pi";
+import { InfoCircleOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
 import {
@@ -39,6 +41,7 @@ import {
 } from "../../store/profile.store";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
+import ListCard from "../listCard/ListCard";
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -202,14 +205,30 @@ const items = [
   },
 ];
 const MainLayout = () => {
-  const { count, increase, decrease, config, setconfig } = configStore();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const [open, setOpen] = useState(false);
+  const [size, setSize] = useState();
+
   const profile = getProfile();
 
   const navigate = useNavigate();
+  const {
+    count,
+    increase,
+    decrease,
+    config,
+    setconfig,
+    count_cart,
+    list_cart,
+    addItemToCart,
+    removeItemFromCart,
+    decreaseCartItem,
+    increaseCartItem,
+  } = configStore();
 
   useEffect(() => {
     getconfigapi();
@@ -217,7 +236,6 @@ const MainLayout = () => {
       navigate("/login");
     }
   }, []);
-
   const getconfigapi = async () => {
     try {
       const res = await request("config", "get");
@@ -237,6 +255,72 @@ const MainLayout = () => {
     // alert(item.key);
   };
 
+
+
+
+const btncloseCartList = (item) => {
+  // Call removeItemFromCart action
+  removeItemFromCart(item);
+
+  // Show success notification after removal
+  notification.info({
+    message: "Success",
+    description: `Remove cart !`,
+    icon: (
+      <InfoCircleOutlined
+        style={{
+          color: "#108ee9",
+        }}
+      />
+    ),
+    placement: "top",
+    duration: 2,
+  });
+};
+
+// Function to increase cart item quantity
+const Pluscartqty = (item) => {
+  // Call increaseCartItem action to increase quantity
+  increaseCartItem(item);
+
+  // Show success notification after increasing the quantity
+  notification.info({
+    message: "Success",
+    description: `Plus cart !`,
+    icon: (
+      <InfoCircleOutlined
+        style={{
+          color: "#108ee9",
+        }}
+      />
+    ),
+    placement: "top",
+    duration: 2,
+  });
+};
+
+// Function to decrease cart item quantity
+const Minuscartqty = (item) => {
+  // Call decreaseCartItem action to decrease quantity
+  decreaseCartItem(item);
+
+  // Show success notification after decreasing the quantity
+  notification.info({
+    message: "Success",
+    description: `Decrease cart  !`,
+    icon: (
+      <InfoCircleOutlined
+        style={{
+          color: "#108ee9",
+        }}
+      />
+    ),
+    placement: "top",
+    duration: 2,
+  });
+};
+
+
   const LOGOUT = () => {
     setProfile("");
     setAccessToken("");
@@ -246,6 +330,15 @@ const MainLayout = () => {
   if (!profile) {
     return null;
   }
+
+  const showDefaultDrawer = () => {
+    setSize("default");
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const itemDroptown = [
     {
@@ -300,40 +393,99 @@ const MainLayout = () => {
             </div>
           </div>
           <div className="admin-header-g2">
-            <MdOutlineMarkEmailUnread className="icon-notify" />
-            <IoIosNotifications className="icon-email" />
-            <div className="Lavel_User">
-              <div className="txt-user-name">{profile?.name}</div>
-              <div className="">{profile?.role_name}</div>
-            </div>
-            {/* <div className="btnLOGOUT">
+            <Space>
+              <Space>
+                <Badge
+                  showZero
+                  count={count_cart}
+                  onClick={showDefaultDrawer}
+                  className="icon-shopping"
+                >
+                  <PiShoppingCart />
+                </Badge>
+                <Badge count={8} className="icon-notify">
+                  <IoIosNotifications />
+                </Badge>
+                <Badge count={8} className="icon-email">
+                  <MdOutlineMarkEmailUnread />
+                </Badge>
+              </Space>
+              <Drawer
+                title={"Product Cart"}
+                placement="right"
+                // size={size}
+                width={550}
+                onClose={onClose}
+                open={open}
+                extra={
+                  <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button type="primary" onClick={onClose}>
+                      OK
+                    </Button>
+                  </Space>
+                }
+              >
+                <div>
+                  {(!list_cart || list_cart.flat().length === 0) && (
+                    <Empty description="No items in the cart" />
+                  )}
+                  {list_cart &&
+                    list_cart.flat().length > 0 &&
+                    list_cart
+                      .flat()
+                      .map((item, index) => (
+                        <ListCard
+                          key={index}
+                          {...item}
+                          btncloseCartList={() => btncloseCartList(item)}
+                          Pluscartqty={() => Pluscartqty(item)}
+                          Minuscartqty={() => Minuscartqty(item)}
+                        />
+                      ))}
+                </div>
+              </Drawer>
+              <div className="Lavel_User">
+                <div className="txt-user-name">{profile?.name}</div>
+                <div className="">{profile?.role_name}</div>
+              </div>
+              {/* <div className="btnLOGOUT">
               {profile && (
                 <Button type="primary" onClick={LOGOUT}>
                   LOGOUT
                 </Button>
               )}
             </div> */}
-            <Dropdown
-              menu={{
-                items: itemDroptown,
-                onClick: (event) => {
-                  if (event.key == "logout") {
-                    LOGOUT();
-                  }
-                },
-              }}
-            >
-              <img className="Profile-User" src={profile_image} alt="Profile" />
-            </Dropdown>
+              <Dropdown
+                menu={{
+                  items: itemDroptown,
+                  onClick: (event) => {
+                    if (event.key == "logout") {
+                      LOGOUT();
+                    }
+                  },
+                }}
+              >
+                <img
+                  className="Profile-User"
+                  src={profile_image}
+                  alt="Profile"
+                />
+              </Dropdown>
+            </Space>
           </div>
         </div>
         <Content
+          className="Admin-body"
           style={{
             margin: "10px",
+            overflowY: "scroll",
+            // height: "calc(100vh - 100px)",
           }}
+          sc
         >
           <div
-            className="Admin-body"
+            className="Admin-content"
             style={{
               background: colorBgContainer,
               borderRadius: borderRadiusLG,

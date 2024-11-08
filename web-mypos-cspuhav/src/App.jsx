@@ -20,6 +20,7 @@ import ExpensePage from "./page/expense/ExpensePage";
 import ExpenseTypePage from "./page/expense_type/ExpenseTypePage";
 import PurchasePage from "./page/purchase/PurchasePage";
 import PurchaseProductPage from "./page/purchase_product/PurchaseProductPage";
+import PosPage from "./page/pos/PosPage";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/expense_type" element={<ExpenseTypePage />} />
           <Route path="/purchase" element={<PurchasePage />} />
           <Route path="/purchase_product" element={<PurchaseProductPage />} />
+          <Route path="/pos" element={<PosPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

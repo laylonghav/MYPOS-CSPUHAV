@@ -98,7 +98,7 @@ export default function ProductPage() {
 
   // State to manage the filter values
   const [filter, setFilter] = useState({
-    txtsearch: "",
+    txt_search: "",
     category_id: "",
     brand: "",
   });
@@ -136,8 +136,7 @@ export default function ProductPage() {
           list: res.list,
           total: refPage.current === 1 ? res.total : pre.total,
         }));
-      } else {
-        console.error("Unexpected response structure:", res); // Handle unexpected structure
+      } else {  r("Unexpected response structure:", res); // Handle unexpected structure
       }
     } catch (error) {
       console.error("Failed to fetch categories:", error); // Catch any request-related errors
@@ -180,7 +179,7 @@ export default function ProductPage() {
     // }
 
     // Handle optional images
-    if (data.product_image && data.product_image.length > 0) {
+    // if (data.product_image && data.product_image.length > 0) {
       try {
         const res_image = await request("product_image/" + data.id, "get");
         if (res_image && !res_image.error && res_image.list) {
@@ -199,9 +198,9 @@ export default function ProductPage() {
         console.error("Error fetching optional images:", error);
         setImageOptional([]);
       }
-    } else {
-      setImageOptional([]); // Clear if no optional images
-    }
+    // } else {
+    //   setImageOptional([]); // Clear if no optional images
+    // }
   };
 
   const onClickDelete = async (data, index) => {
@@ -539,13 +538,14 @@ export default function ProductPage() {
         className=""
       >
         <Space>
-          <div>Category  {state.total}</div>
+          <div>Category {state.total}</div>
           <Input.Search
+          onSearch={getlist}
             allowClear
             onChange={(event) =>
               setFilter((p) => ({
                 ...p,
-                txtsearch: event.target.value,
+                txt_search: event.target.value,
               }))
             }
             placeholder="Search"
@@ -838,70 +838,70 @@ export default function ProductPage() {
           //   key: "product_image",
           // },
 
-          {
-            title: "Images",
-            dataIndex: "product_image", // Ensure this matches your data structure
-            key: "product_image",
-            render: (images) => {
-              // If images is a single string, wrap it in an array
-              const imageArray = Array.isArray(images) ? images : [images];
+          // {
+          //   title: "Images",
+          //   dataIndex: "product_image", // Ensure this matches your data structure
+          //   key: "product_image",
+          //   render: (images) => {
+          //     // If images is a single string, wrap it in an array
+          //     const imageArray = Array.isArray(images) ? images : [images];
 
-              return (
-                <div
-                  style={{
-                    width: "150px",
-                    height: "100px",
-                    overflow: "hidden",
-                  }}
-                >
-                  {imageArray && imageArray.length > 0 ? (
-                    <Carousel
-                      autoplaySpeed={4000}
-                      arrows
-                      waitForAnimate={true}
-                      autoplay
-                    >
-                      {imageArray.map((image, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            // position: "relative",
-                            height: "150px",
-                            width: "100px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundImage: `url(http://localhost/fullstack/image_cspuhav/${image})`,
-                              width: "150px",
-                              height: "100px",
-                              backgroundSize: "cover",
-                              borderRadius: "10px", // Optional: Add border radius for aesthetics
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </Carousel>
-                  ) : (
-                    <div
-                      style={{
-                        backgroundColor: "gray",
-                        width: "150px",
-                        height: "100px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 10,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <MdImageNotSupported style={{ fontSize: 70 }} />
-                    </div>
-                  )}
-                </div>
-              );
-            },
-          },
+          //     return (
+          //       <div
+          //         style={{
+          //           width: "150px",
+          //           height: "100px",
+          //           overflow: "hidden",
+          //         }}
+          //       >
+          //         {imageArray && imageArray.length > 0 ? (
+          //           <Carousel
+          //             autoplaySpeed={4000}
+          //             arrows
+          //             waitForAnimate={true}
+          //             autoplay
+          //           >
+          //             {imageArray.map((image, index) => (
+          //               <div
+          //                 key={index}
+          //                 style={{
+          //                   // position: "relative",
+          //                   height: "150px",
+          //                   width: "100px",
+          //                 }}
+          //               >
+          //                 <div
+          //                   style={{
+          //                     backgroundImage: `url(http://localhost/fullstack/image_cspuhav/${image})`,
+          //                     width: "150px",
+          //                     height: "100px",
+          //                     backgroundSize: "cover",
+          //                     borderRadius: "10px", // Optional: Add border radius for aesthetics
+          //                   }}
+          //                 />
+          //               </div>
+          //             ))}
+          //           </Carousel>
+          //         ) : (
+          //           <div
+          //             style={{
+          //               backgroundColor: "gray",
+          //               width: "150px",
+          //               height: "100px",
+          //               display: "flex",
+          //               justifyContent: "center",
+          //               alignItems: "center",
+          //               borderRadius: 10,
+          //               overflow: "hidden",
+          //             }}
+          //           >
+          //             <MdImageNotSupported style={{ fontSize: 70 }} />
+          //           </div>
+          //         )}
+          //       </div>
+          //     );
+          //   },
+          // },
           {
             title: "image",
             dataIndex: "image",

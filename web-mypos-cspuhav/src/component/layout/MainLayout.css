@@ -49,18 +49,27 @@
 }
 
 .icon-notify {
-  margin-top: 10px;
-  font-size: 35px;
-  margin-right: 15px;
+  margin: 0px 15px;
+  font-size: 40px;
+  /* margin-right: 15px; */
 }
 .icon-email {
-  margin-top: 10px;
+  margin: 0px  15px 0px  0px;
   font-size: 35px;
-  margin-right: 15px;
+  /* margin-right: 15px; */
+}
+.icon-shopping {
+  /* margin-top: 10px; */
+  font-size: 35px;
+  /* margin-right: 15px; */
 }
 .Admin-body {
+  
+  height: calc(100vh - 100px);
+}
+.Admin-content {
   padding: 16px;
-height: calc(100vh - 100px);
+  min-height: calc(100vh - 100px);
 }
 .btnLOGOUT Button{
   margin-top: 15px;

@@ -9,37 +9,36 @@ const {
 
 exports.getlist = async (req, res) => {
   try {
-    var { txt_search, category_id, brand, page } = req.query;
+    var { txt_search, category_id, brand, page,is_list_all } = req.query;
     const pageSize = 5; // fix
     page = Number(page); // 1,2,3,4 from client
     const offset = (page - 1) * pageSize; // find
     var sqlSelect = `SELECT p.*, 
-             c.name AS category_name,
-             pi.image AS product_image,
-             pi.id AS product_image_id `;
+             c.name AS category_name `;
     var sqlJoin = `FROM product p
       INNER JOIN category c 
-        ON p.category_id = c.id
-      LEFT JOIN product_image pi
-        ON pi.product_id = p.id `;
+        ON p.category_id = c.id `;
     var sqlWhere = "WHERE true ";
     if (txt_search) {
       sqlWhere += " AND (p.name LIKE :txt_search OR p.barcode = :barcode) ";
     }
     if (category_id) {
-      sqlWhere += " AND p.category_id = :category_id";
+      sqlWhere += " AND p.category_id = :category_id ";
     }
     if (brand) {
-      sqlWhere += " AND p.brand = :brand";
+      sqlWhere += " AND p.brand = :brand ";
     }
     var sqlLimit = " LIMIT " + pageSize + " OFFSET " + offset;
+    if (is_list_all){
+      sqlLimit="";
+    }
     var sqlList = sqlSelect + sqlJoin + sqlWhere + sqlLimit;
-    var sqlparam = {
-      txt_search: "%" + txt_search + "%",
-      barcode: txt_search,
-      category_id,
-      brand,
-    };
+      var sqlparam = {
+        txt_search: "%" + txt_search + "%",
+        barcode: txt_search,
+        category_id,
+        brand,
+      };
     const [list] = await db.query(sqlList, sqlparam);
     var dataCount = 0;
     if (page == 1) {
