@@ -3,7 +3,16 @@ import "./MainLayout.css";
 import logo from "../../assets/Image/Logo/Mylogo.png";
 import profile_image from "../../assets/Image/Logo/laylonghav.jpg";
 import React, { useEffect, useState } from "react";
-import { Input, Button, Dropdown, Space, Badge, Drawer, Empty, notification } from "antd";
+import {
+  Input,
+  Button,
+  Dropdown,
+  Space,
+  Badge,
+  Drawer,
+  Empty,
+  notification,
+} from "antd";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { PiShoppingCart } from "react-icons/pi";
@@ -212,6 +221,7 @@ const MainLayout = () => {
 
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState();
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
 
   const profile = getProfile();
 
@@ -228,6 +238,8 @@ const MainLayout = () => {
     removeItemFromCart,
     decreaseCartItem,
     increaseCartItem,
+    clearCart,
+    cartSummary,
   } = configStore();
 
   useEffect(() => {
@@ -255,71 +267,82 @@ const MainLayout = () => {
     // alert(item.key);
   };
 
+  const btncloseCartList = (item) => {
+    // Call removeItemFromCart action
+    removeItemFromCart(item);
 
+    // Show success notification after removal
+    notification.info({
+      message: "Success",
+      description: `Remove cart !`,
+      icon: (
+        <InfoCircleOutlined
+          style={{
+            color: "#108ee9",
+          }}
+        />
+      ),
+      placement: "top",
+      duration: 2,
+    });
+  };
 
+  const summary = cartSummary();
 
-const btncloseCartList = (item) => {
-  // Call removeItemFromCart action
-  removeItemFromCart(item);
+  // Function to increase cart item quantity
+  const Pluscartqty = (item) => {
+    // Call increaseCartItem action to increase quantity
+    increaseCartItem(item);
 
-  // Show success notification after removal
-  notification.info({
-    message: "Success",
-    description: `Remove cart !`,
-    icon: (
-      <InfoCircleOutlined
-        style={{
-          color: "#108ee9",
-        }}
-      />
-    ),
-    placement: "top",
-    duration: 2,
-  });
-};
+    // Show success notification after increasing the quantity
+    notification.info({
+      message: "Success",
+      description: `Plus cart !`,
+      icon: (
+        <InfoCircleOutlined
+          style={{
+            color: "#108ee9",
+          }}
+        />
+      ),
+      placement: "top",
+      duration: 2,
+    });
+  };
 
-// Function to increase cart item quantity
-const Pluscartqty = (item) => {
-  // Call increaseCartItem action to increase quantity
-  increaseCartItem(item);
-
-  // Show success notification after increasing the quantity
-  notification.info({
-    message: "Success",
-    description: `Plus cart !`,
-    icon: (
-      <InfoCircleOutlined
-        style={{
-          color: "#108ee9",
-        }}
-      />
-    ),
-    placement: "top",
-    duration: 2,
-  });
-};
-
-// Function to decrease cart item quantity
-const Minuscartqty = (item) => {
-  // Call decreaseCartItem action to decrease quantity
-  decreaseCartItem(item);
-
-  // Show success notification after decreasing the quantity
-  notification.info({
-    message: "Success",
-    description: `Decrease cart  !`,
-    icon: (
-      <InfoCircleOutlined
-        style={{
-          color: "#108ee9",
-        }}
-      />
-    ),
-    placement: "top",
-    duration: 2,
-  });
-};
-
+  // Function to decrease cart item quantity
+  const Minuscartqty = (item) => {
+    decreaseCartItem(item);
+    if (count_cart != 1) {
+      notification.info({
+        message: "Success",
+        description: `Decrease cart  !`,
+        icon: (
+          <InfoCircleOutlined
+            style={{
+              color: "#108ee9",
+            }}
+          />
+        ),
+        placement: "top",
+        duration: 2,
+      });
+    } else {
+      notification.error({
+        message: "Error",
+        description: "Can not decrease !",
+        icon: (
+          <InfoCircleOutlined
+            style={{
+              color: "#ff4d4f",
+            }}
+          />
+        ),
+        placement: "top",
+        duration: 3,
+      });
+    }
+  };
 
   const LOGOUT = () => {
     setProfile("");
@@ -338,6 +361,29 @@ const Minuscartqty = (item) => {
 
   const onClose = () => {
     setOpen(false);
+  };
+  const showChildrenDrawer = () => {
+    setChildrenDrawer(true);
+  };
+
+  const onChildrenDrawerClose = () => {
+    setChildrenDrawer(false);
+  };
+  const clearItemCart = () => {
+    clearCart();
+    notification.info({
+      message: "Success",
+      description: `Cart has been reset!`,
+      icon: (
+        <InfoCircleOutlined
+          style={{
+            color: "#108ee9",
+          }}
+        />
+      ),
+      placement: "top",
+      duration: 2,
+    });
   };
 
   const itemDroptown = [
@@ -414,6 +460,7 @@ const Minuscartqty = (item) => {
                 title={"Product Cart"}
                 placement="right"
                 // size={size}
+                // closable={false}
                 width={550}
                 onClose={onClose}
                 open={open}
@@ -444,6 +491,110 @@ const Minuscartqty = (item) => {
                         />
                       ))}
                 </div>
+                {list_cart && list_cart.length > 0 ? (
+                  <Space>
+                    <Button type="primary" onClick={clearItemCart}>
+                      Clear
+                    </Button>
+                    <Button type="primary" onClick={showChildrenDrawer}>
+                      Summary
+                    </Button>
+                  </Space>
+                ) : (
+                  <></>
+                )}
+
+                <Drawer
+                  title="Summary Cart"
+                  width={400}
+                  closable={false}
+                  onClose={onChildrenDrawerClose}
+                  open={childrenDrawer}
+                >
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Quantity total : </div>
+                      <div>{summary.total_qty}</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Subtotal : </div>
+                      <div>{summary.sub_total}$</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Discount total : </div>
+                      <div>{summary.save_discount}$</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Original Price total : </div>
+                      <div>{summary.original_total}$</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Tax total : </div>
+                      <div>{summary.tax}$</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Discount total (%) : </div>
+                      <div>{summary.discount_percentage}%</div>
+                    </div>
+                  </div>
+                  <div style={{ borderBottom: "1px solid black" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 8,
+                        marginTop: 10,
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}>Price total : </div>
+                      <div>{summary.total}$</div>
+                    </div>
+                  </div>
+                </Drawer>
               </Drawer>
               <div className="Lavel_User">
                 <div className="txt-user-name">{profile?.name}</div>

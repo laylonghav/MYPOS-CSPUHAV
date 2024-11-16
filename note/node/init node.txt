@@ -14,3 +14,6 @@ npm install --save-dev nodemon
 
 ALTER TABLE employee
 ADD FOREIGN KEY (role_id) REFERENCES role(id);
+
+
+ALTER TABLE `order` ADD `total_amount` DECIMAL(6,2) NOT NULL DEFAULT 0 AFTER `user_id`;

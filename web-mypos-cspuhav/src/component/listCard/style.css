@@ -1,6 +1,6 @@
 .product-list {
   border: 1px solid #ffffff;
-  padding: 0 10px;
+  padding: 5px 10px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -37,14 +37,18 @@
   color: rgb(197, 197, 197);
   transition: all 0.2s ease-in-out;
 }
-
+.productdescription{
+  font-size: 0.9rem;
+  color: #606060;
+}
 .product-brand,
 .product-category,
 .product-barcode,
 .product-qty,
 .product-description,
 .product-status {
-  font-size: 1rem;
+  
+ font-size: 1rem;
   color: #606060;
 }
 .product {
@@ -55,8 +59,8 @@
 }
 .image {
   flex-shrink: 0;
-  width: 80px; /* Slightly larger for better image display */
-  height: 80px;
+  width: 100px; /* Slightly larger for better image display */
+  height: 100px;
   border-radius: 50%;
   overflow: hidden;
   outline: 3px solid #1677ff;
@@ -83,8 +87,13 @@
 .infor p {
   margin: 0.2rem 0;
 }
-.price {
+.priceTotal {
   font-size: 18px;
+  font-weight: bold;
+  color: green;
+  margin: 0;
+}
+.price{
   font-weight: bold;
   color: green;
   margin: 0;

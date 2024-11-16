@@ -46,7 +46,9 @@ export default function PosPage() {
     slidesToScroll: 1,
   });
 
-  const { list_cart, config, addItemToCart } = configStore();
+  const { list_cart, config, addItemToCart, cartSummary } = configStore();
+  const summary = cartSummary();
+
   const [form] = Form.useForm();
   const [state, setState] = useState({
     loading: false,
@@ -109,8 +111,6 @@ export default function PosPage() {
     try {
       // Add item to cart
       addItemToCart(item);
-
-      // Display success notification with item name
       notification.info({
         message: "Item Added to Cart",
         description: `${item.name || "Item"} added to your cart successfully!`,
@@ -218,7 +218,6 @@ export default function PosPage() {
             <Col key={index} xs={24} sm={24} md={12} lg={8} xl={6} xxl={4}>
               <ProductCard
                 {...item}
-                description={item.des}
                 onAddToBag={() => onAddToBag(item)}
                 // onwishlist={() => onwishlist(item)}
               />

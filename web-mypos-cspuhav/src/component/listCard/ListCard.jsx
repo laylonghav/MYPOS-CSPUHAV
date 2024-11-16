@@ -48,43 +48,63 @@ export default function ListCard({
             />
           </div>
           <div className="infor">
-            <p style={{ fontWeight: "bold" }}>
-              {name} | {brand} | {category_name}
+            <p style={{ fontWeight: "bold" }}>{name}</p>
+            <p style={{ fontWeight: "bold", color: "#606060" }}>
+              {brand} | {category_name} | {barcode}
             </p>
-            <p className="product-description">{description}</p>
-            <Space>
-              <p className="product-barcode">Barcode: {barcode}</p>
-              <p className="product-qty">
-                Quantity:{" "}
-                <Tag color="orange" style={{ fontSize: "1.2rem" }}>
-                  {cart_qty}
-                </Tag>{" "}
+            <p style={{}} className="productdescription">
+              {description}
+            </p>
+
+            {/* <p className="product-barcode">Barcode: </p> */}
+            <Space style={{ margin: 0 }} className="product-qty">
+              Quantity :
+              <Tag color="orange" style={{ marginTop: 0 }}>
+                {cart_qty}
+              </Tag>
+              <p className="product-status" style={{ margin: 0 }}>
+                Status : {""}
+                {status ? (
+                  <Tag style={{ margin: 0 }} color="green">
+                    Available
+                  </Tag>
+                ) : (
+                  <Tag style={{ margin: 0 }} color="red">
+                    Out of Stock
+                  </Tag>
+                )}
               </p>
             </Space>
+
             <Space>
               {discount && discount != 0 ? (
                 <Space>
                   <del className="originalprice">{price}$</del>
                   <span className="Discount">-{discount}%</span>
+                  <span className="price">{finalPrice}$ /1</span>
                 </Space>
               ) : (
                 <Space className="finalprice">{price}$</Space>
               )}
-              <Space>
-                <p className="product-status">
-                  {" "}
-                  Status:{" "}
-                  {status ? (
-                    <Tag color="green">Available</Tag>
-                  ) : (
-                    <Tag color="red">Out of Stock</Tag>
-                  )}
-                </p>
-              </Space>
             </Space>
           </div>
-          <div>
-            <Space className="price">{finalPrice}$</Space>
+          <div style={{}}>
+            <Space className="priceTotal">
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <Space style={{ color: "#1890ff" }}>Total</Space>
+                </div>
+                <div>
+                  {cart_qty * finalPrice}$/{cart_qty}
+                </div>
+              </div>
+            </Space>
           </div>
           <div
             style={{

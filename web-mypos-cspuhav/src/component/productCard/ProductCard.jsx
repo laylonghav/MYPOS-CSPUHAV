@@ -1,7 +1,7 @@
 import React from "react";
 import "./styleProductCard.css";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Badge, Button, Image, Tag } from "antd";
+import { Badge, Button, Image, Space, Tag } from "antd";
 import { configs } from "../../util/config";
 
 const ProductCard = ({
@@ -26,9 +26,10 @@ const ProductCard = ({
 
   return (
     <Badge.Ribbon
-      style={discount > 0 ? "" : { display: "none" }}
-      color="red"
-      text={`Discount ${discount}%`}
+      style={discount > 0 ? { fontSize: "1rem" } : { display: "none" }}
+      color="#1890ff"
+      size="middle"
+      text={`Save ${discount}%`}
     >
       <article className="product-card">
         {/* Product Image and Wishlist Icon */}
@@ -45,9 +46,9 @@ const ProductCard = ({
             aria-label="Toggle Wishlist"
           >
             {wishlist ? (
-              <HeartFilled style={{ color: "red" }} />
+              <HeartFilled style={{ color: "orange" }} />
             ) : (
-              <HeartOutlined style={{ color: "gray" }} />
+              <HeartOutlined style={{ color: "orange" }} />
             )}
           </button>
         </div>
@@ -55,19 +56,33 @@ const ProductCard = ({
         {/* Product Details */}
         <div className="product-info">
           <h2 className="product-name">{name}</h2>
-          <p className="product-brand">Brand: {brand}</p>
-          <p className="product-category">Category: {category_name}</p>
-          <p className="product-barcode">Barcode: {barcode}</p>
-          <p className="product-qty">Stock: {qty} units</p>
-          <p className="product-status">
-            Status:{" "}
-            {status ? (
-              <Tag color="green">Available</Tag>
-            ) : (
-              <Tag color="red">Out of Stock</Tag>
-            )}
-          </p>
-          <p className="product-description">{description}</p>
+          <h2>
+            <Space>
+              <span className="product-brand">
+                {brand} | {category_name} | {barcode}
+              </span>
+              {/* <span className="product-category"></span> */}
+            </Space>
+          </h2>
+
+          <p className="description">{description}</p>
+
+          {/* <p className="product-barcode">Barcode: </p> */}
+          <Space>
+            <p className="product-qty">
+              Stock : <Tag color="blue"> {status ? qty : 0 }</Tag>
+            </p>
+            <p className="product-status">
+              Status : {""}
+              {status ? (
+                <Tag color="green">Available</Tag>
+              ) : (
+                <Tag color="red">Out of Stock</Tag>
+              )}
+            </p>
+          </Space>
+
+          {/* <p className="product-description">{description}</p> */}
 
           {/* Price Details */}
           <div className="price-container">
