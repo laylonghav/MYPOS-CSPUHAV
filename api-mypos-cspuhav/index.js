@@ -64,6 +64,8 @@ require("./src/route/expense_type.route")(app);
 require("./src/route/purchase.route")(app);
 require("./src/route/purchase_product.route")(app);
 require("./src/route/order.route")(app);
+require("./src/route/dashboard.route")(app);
+require("./src/route/report_sale_sammury.route")(app);
 
 const PORT = 8081;
 app.listen(PORT, () => {

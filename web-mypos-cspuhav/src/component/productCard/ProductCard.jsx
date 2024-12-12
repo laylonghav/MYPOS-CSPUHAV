@@ -70,7 +70,7 @@ const ProductCard = ({
           {/* <p className="product-barcode">Barcode: </p> */}
           <Space>
             <p className="product-qty">
-              Stock : <Tag color="blue"> {status ? qty : 0 }</Tag>
+              Stock : <Tag color="blue"> {status ? qty : 0}</Tag>
             </p>
             <p className="product-status">
               Status : {""}
@@ -102,7 +102,7 @@ const ProductCard = ({
             className="add-to-cart-button"
             type="primary"
             onClick={() => onAddToBag(id)}
-            disabled={!status}
+            disabled={!status || qty <= 0} // Disable if status is false or qty is 0 or less
           >
             Add to Cart
           </Button>

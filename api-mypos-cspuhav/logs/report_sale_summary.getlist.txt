@@ -1,0 +1,17 @@
+[12/12/2024 23:57:58] ReferenceError: from_date is not defined
+[12/12/2024 23:57:58] ReferenceError: from_date is not defined
+[13/12/2024 01:14:40] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:40] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:42] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = '2') and (brand_id IS NULL OR p...' at line 1
+[13/12/2024 01:14:44] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = '1') and (brand_id IS NULL OR p...' at line 1
+[13/12/2024 01:14:48] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:48] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:49] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:52] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:56] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:14:56] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:15:05] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where (category_id IS NULL OR p.category_id = NULL) and (brand_id IS NULL OR ...' at line 1
+[13/12/2024 01:15:47] Error: Unknown column 'category_id' in 'where clause'
+[13/12/2024 01:15:47] Error: Unknown column 'category_id' in 'where clause'
+[13/12/2024 01:19:53] Error: Unknown column 'od1.proudct_id' in 'on clause'
+[13/12/2024 01:19:53] Error: Unknown column 'od1.proudct_id' in 'on clause'

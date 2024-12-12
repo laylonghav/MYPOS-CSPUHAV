@@ -47,41 +47,40 @@ export default function EmployeePage() {
   });
 
   // Function to fetch the list based on the filter
- const getlist = async () => {
-   try {
-     const param = {
-       txtsearch: filter.txtsearch,
-       position: filter.position,
-     };
+  const getlist = async () => {
+    try {
+      const param = {
+        txtsearch: filter.txtsearch,
+        position: filter.position,
+      };
 
-     // Make the API request
-     const res = await request("employee", "get", param);
+      // Make the API request
+      const res = await request("employee", "get", param);
 
-     // Check if the response is structured as expected and contains the 'list' property
-     if (res && res.list && Array.isArray(res.list)) {
-       // Update the state with the fetched list
-       setState((prev) => ({
-         ...prev,
-         list: res.list,
-       }));
-     } else if (res && res.message) {
-       // If there's an error message from the server, log it
-       console.error("Server response:", res.message);
-     } else {
-       // Handle unexpected structure if 'list' is missing
-       console.error("Unexpected response structure:", res);
-     }
-   } catch (error) {
-     // Catch any network or request-related errors
-     console.error("Failed to fetch employee list:", error.message || error);
+      // Check if the response is structured as expected and contains the 'list' property
+      if (res && res.list && Array.isArray(res.list)) {
+        // Update the state with the fetched list
+        setState((prev) => ({
+          ...prev,
+          list: res.list,
+        }));
+      } else if (res && res.message) {
+        // If there's an error message from the server, log it
+        console.error("Server response:", res.message);
+      } else {
+        // Handle unexpected structure if 'list' is missing
+        console.error("Unexpected response structure:", res);
+      }
+    } catch (error) {
+      // Catch any network or request-related errors
+      console.error("Failed to fetch employee list:", error.message || error);
 
-     // Optional: If you want to log additional error details, you can add this line
-     if (error.response) {
-       console.error("Error response data:", error.response.data);
-     }
-   }
- };
-
+      // Optional: If you want to log additional error details, you can add this line
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+      }
+    }
+  };
 
   const onClickEdit = async (data) => {
     if (!data || typeof data !== "object") {

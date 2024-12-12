@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import logo from "../../assets/Image/Logo/Mylogo.png";
 import profile_image from "../../assets/Image/Logo/laylonghav.jpg";
-import React, { useEffect, useState } from "react";
+import React, { lazy, useCallback, useEffect, useRef, useState } from "react";
 import {
   Input,
   Button,
@@ -12,11 +12,15 @@ import {
   Drawer,
   Empty,
   notification,
+  InputNumber,
+  Select,
+  message,
 } from "antd";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { PiShoppingCart } from "react-icons/pi";
 import { InfoCircleOutlined } from "@ant-design/icons";
+
 const { Search } = Input;
 
 import {
@@ -51,6 +55,8 @@ import {
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
 import ListCard from "../listCard/ListCard";
+import { useReactToPrint } from "react-to-print";
+import PrintInvoice from "../PrintInvoice/PrintInvoice";
 const { Header, Content, Footer, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
@@ -169,6 +175,49 @@ const items = [
     ],
   },
   {
+    key: "report",
+    icon: <TeamOutlined />,
+    label: "Report",
+    children: [
+      {
+        key: "sale",
+        icon: <TeamOutlined />,
+        children: null,
+        label: "Sale",
+      },
+      {
+        key: "top_sale",
+        icon: <TeamOutlined />,
+        children: null,
+        label: "Top Sale",
+      },
+      {
+        key: "expense_summary",
+        icon: <TeamOutlined />,
+        children: null,
+        label: "Expense",
+      },
+      {
+        key: "purchase",
+        icon: <TeamOutlined />,
+        children: null,
+        label: "Purchase",
+      },
+      {
+        key: "new_customer",
+        icon: <TeamOutlined />,
+        children: null,
+        label: "New Customer",
+      },
+      {
+        key: "payroll",
+        icon: <PayCircleOutlined />,
+        children: null,
+        label: "Payroll",
+      },
+    ],
+  },
+  {
     key: "user",
     icon: <UserOutlined />,
     label: "User",
@@ -219,9 +268,9 @@ const MainLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const [open, setOpen] = useState(false);
-  const [size, setSize] = useState();
-  const [childrenDrawer, setChildrenDrawer] = useState(false);
+  // const [open2, setOpen2] = useState(false);
+  // const [size, setSize] = useState();
+  // const [childrenDrawer1, setChildrenDrawer] = useState(false);
 
   const profile = getProfile();
 
@@ -230,8 +279,12 @@ const MainLayout = () => {
     count,
     increase,
     decrease,
+    open,
+    childrenDrawer,
     config,
     setconfig,
+    setOpen,
+    setChildrenDrawer,
     count_cart,
     list_cart,
     addItemToCart,
@@ -240,7 +293,28 @@ const MainLayout = () => {
     increaseCartItem,
     clearCart,
     cartSummary,
+    setGlobal,
+    clearGlobalState,
+    globalState,
+    inv,
+    setOrder,
   } = configStore();
+
+  const refInvoice = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    contentRef: refInvoice, // Reference to PrintInvoice component
+    onBeforePrint: useCallback(() => {
+      console.log("`onBeforePrint` called");
+      return Promise.resolve();
+    }, []),
+    onAfterPrint: useCallback(() => {
+      console.log("`onAfterPrint` called");
+    }, []),
+    onPrintError: useCallback(() => {
+      console.log("`onPrintError` called");
+    }, []),
+  });
 
   useEffect(() => {
     getconfigapi();
@@ -248,6 +322,7 @@ const MainLayout = () => {
       navigate("/login");
     }
   }, []);
+
   const getconfigapi = async () => {
     try {
       const res = await request("config", "get");
@@ -291,43 +366,13 @@ const MainLayout = () => {
 
   // Function to increase cart item quantity
   const Pluscartqty = (item) => {
-    // Call increaseCartItem action to increase quantity
     increaseCartItem(item);
-
-    // Show success notification after increasing the quantity
-    notification.info({
-      message: "Success",
-      description: `Plus cart !`,
-      icon: (
-        <InfoCircleOutlined
-          style={{
-            color: "#108ee9",
-          }}
-        />
-      ),
-      placement: "top",
-      duration: 2,
-    });
   };
 
   // Function to decrease cart item quantity
   const Minuscartqty = (item) => {
     decreaseCartItem(item);
-    if (count_cart != 1) {
-      notification.info({
-        message: "Success",
-        description: `Decrease cart  !`,
-        icon: (
-          <InfoCircleOutlined
-            style={{
-              color: "#108ee9",
-            }}
-          />
-        ),
-        placement: "top",
-        duration: 2,
-      });
-    } else {
+    if (!(count_cart != 1)) {
       notification.error({
         message: "Error",
         description: "Can not decrease !",
@@ -344,6 +389,11 @@ const MainLayout = () => {
     }
   };
 
+  const holderCheckOut = configStore.getState().onCheckOutClick;
+  const onClose = configStore.getState().onCheckCloseDrawer;
+  const onChildrenDrawerClose = configStore.getState().onChildrenDrawerClose;
+  const holderPrint = configStore.getState().holderPrint;
+
   const LOGOUT = () => {
     setProfile("");
     setAccessToken("");
@@ -355,22 +405,25 @@ const MainLayout = () => {
   }
 
   const showDefaultDrawer = () => {
-    setSize("default");
     setOpen(true);
+    // clearGlobalState();
+  };
+  const closeDefaultDrawer = () => {
+    setOpen(false);
+    // clearGlobalState();
   };
 
-  const onClose = () => {
-    setOpen(false);
-  };
   const showChildrenDrawer = () => {
     setChildrenDrawer(true);
+    // clearGlobalState();
   };
 
-  const onChildrenDrawerClose = () => {
-    setChildrenDrawer(false);
-  };
+  // const onChildrenDrawerClose = () => {
+  //   setChildrenDrawer(false);
+  // };
   const clearItemCart = () => {
     clearCart();
+    clearGlobalState();
     notification.info({
       message: "Success",
       description: `Cart has been reset!`,
@@ -444,7 +497,7 @@ const MainLayout = () => {
                 <Badge
                   showZero
                   count={count_cart}
-                  onClick={showDefaultDrawer}
+                  onClick={showDefaultDrawer || setOpen(false)}
                   className="icon-shopping"
                 >
                   <PiShoppingCart />
@@ -462,14 +515,14 @@ const MainLayout = () => {
                 // size={size}
                 // closable={false}
                 width={550}
-                onClose={onClose}
+                onClose={closeDefaultDrawer}
                 open={open}
                 extra={
                   <Space>
-                    <Button onClick={onClose}>Cancel</Button>
+                    {/* <Button onClick={onClose}>Cancel</Button>
                     <Button type="primary" onClick={onClose}>
                       OK
-                    </Button>
+                    </Button> */}
                   </Space>
                 }
               >
@@ -496,7 +549,10 @@ const MainLayout = () => {
                     <Button type="primary" onClick={clearItemCart}>
                       Clear
                     </Button>
-                    <Button type="primary" onClick={showChildrenDrawer}>
+                    <Button
+                      type="primary"
+                      onClick={showChildrenDrawer || setChildrenDrawer(false)}
+                    >
                       Summary
                     </Button>
                   </Space>
@@ -506,7 +562,7 @@ const MainLayout = () => {
 
                 <Drawer
                   title="Summary Cart"
-                  width={400}
+                  width={500}
                   closable={false}
                   onClose={onChildrenDrawerClose}
                   open={childrenDrawer}
@@ -579,21 +635,97 @@ const MainLayout = () => {
                       }}
                     >
                       <div style={{ flexGrow: 1 }}>Discount total (%) : </div>
-                      <div>{summary.discount_percentage}%</div>
+                      <div>{summary.discount_percentage || 0}% </div>
                     </div>
                   </div>
-                  <div style={{ borderBottom: "1px solid black" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        marginBottom: 8,
-                        marginTop: 10,
-                      }}
-                    >
-                      <div style={{ flexGrow: 1 }}>Price total : </div>
+                  <div className=" pb-2">
+                    <div className="flex justify-between mt-2 ">
+                      <div className="flex-grow">Price total:</div>
                       <div>{summary.total}$</div>
                     </div>
                   </div>
+
+                  {/* Customer and Payment Method Selection */}
+                  <div className="flex flex-row justify-between gap-2 mt-2">
+                    <div className="w-1/2">
+                      <Select
+                        value={globalState.customer_id} // Set value from globalState
+                        placeholder="Select customer"
+                        options={config.customer}
+                        className="w-full"
+                        onChange={(value) => setGlobal({ customer_id: value })} // Update customer in globalState
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <Select
+                        value={globalState.payment_method} // Set value from globalState
+                        placeholder="Select method pay"
+                        options={[
+                          { label: "Wing", value: "wing" },
+                          { label: "ABA", value: "aba" },
+                          { label: "ACLEDA", value: "acleda" },
+                          { label: "TrueMoney", value: "truemoney" },
+                          { label: "Pi Pay", value: "pipay" },
+                          { label: "PayGo", value: "paygo" },
+                          { label: "PrincePay", value: "princepay" },
+                          { label: "Ly Hour Veluy", value: "lyhour" },
+                          { label: "AMK Mobile Banking", value: "amk" },
+                          { label: "Vattanac Bank", value: "vattanac" },
+                          { label: "Canadia Bank", value: "canadia" },
+                          { label: "Chip Mong Bank", value: "chipmong" },
+                          { label: "E-money", value: "emoney" },
+                          { label: "Cambodia Post Bank", value: "cpb" },
+                        ]}
+                        className="w-full"
+                        onChange={(value) =>
+                          setGlobal({ payment_method: value })
+                        } // Update payment method in globalState
+                      />
+                    </div>
+                  </div>
+
+                  {/* Remark Input */}
+                  <div className="mt-2">
+                    <Input.TextArea
+                      placeholder="Add a remark (optional)"
+                      value={globalState.remark} // Set value from globalState
+                      onChange={(e) => setGlobal({ remark: e.target.value })} // Update remark in globalState
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Paid Amount Input and Checkout Button */}
+                  <Space className="flex flex-row justify-between gap-2 mt-2">
+                    <div className="flex-grow">
+                      <InputNumber
+                        placeholder="Amount"
+                        value={globalState.paid_amount} // Set value from globalState
+                        className="w-full"
+                        onChange={(value) => {
+                          setGlobal({
+                            paid_amount: value,
+                          });
+                        }}
+                      />
+                    </div>
+
+                    <Space className="">
+                      <Button
+                        type="primary"
+                        onClick={handlePrint}
+                        className="w-full"
+                      >
+                        Print invoice
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={holderCheckOut}
+                        className="w-full"
+                      >
+                        Check Out
+                      </Button>
+                    </Space>
+                  </Space>
                 </Drawer>
               </Drawer>
               <div className="Lavel_User">
@@ -630,7 +762,7 @@ const MainLayout = () => {
           className="Admin-body"
           style={{
             margin: "10px",
-            overflowY: "scroll",
+            overflowY: "auto",
             // height: "calc(100vh - 100px)",
           }}
           sc
@@ -642,6 +774,23 @@ const MainLayout = () => {
               borderRadius: borderRadiusLG,
             }}
           >
+            <div className="hidden">
+              <PrintInvoice
+                ref={refInvoice}
+                list_cart={list_cart}
+                customer={inv.customer}
+                order_no={inv.order_no}
+                order_date={inv.order_date}
+                paid_amount={globalState.paid_amount}
+                payment_method={globalState.payment_method}
+                total_amount={summary.total}
+                remark={globalState.remark}
+              />
+            </div>
+            {/* <h1>{inv.customer + ""}</h1>
+            <h1>{inv.order_no + ""}</h1>
+            <h1>{inv.order_date + ""}</h1> */}
+
             <Outlet />
           </div>
         </Content>

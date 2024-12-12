@@ -21,6 +21,11 @@ import ExpenseTypePage from "./page/expense_type/ExpenseTypePage";
 import PurchasePage from "./page/purchase/PurchasePage";
 import PurchaseProductPage from "./page/purchase_product/PurchaseProductPage";
 import PosPage from "./page/pos/PosPage";
+import OrderPage from "./page/order/OrderPage";
+import PdfViewerComponent from "./page/pdf/PdfViewerComponent";
+import SaleSummaryPage from "./page/report/SaleSummaryPage";
+import ExpenseSummaryPage from "./page/report/ExpenseSummaryPage";
+
 
 function App() {
   return (
@@ -40,6 +45,10 @@ function App() {
           <Route path="/purchase" element={<PurchasePage />} />
           <Route path="/purchase_product" element={<PurchaseProductPage />} />
           <Route path="/pos" element={<PosPage />} />
+          <Route path="/order" element={<OrderPage />} />
+          <Route path="/view-pdf" element={<PdfViewerComponent />} />
+          <Route path="/sale" element={<SaleSummaryPage />} />
+          <Route path="/expense_summary" element={<ExpenseSummaryPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

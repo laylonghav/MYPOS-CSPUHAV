@@ -1,153 +1,186 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { request } from "../../util/helper";
-import { Slide } from "react-slideshow-image";
-import "react-slideshow-image/dist/styles.css"; // Import Slider from react-slick
-import ViewSlider from "react-view-slider";
-import "./style.css";
-import {
-  Space,
-  Table,
-  Tag,
-  Button,
-  Modal,
-  Input,
-  Form,
-  Select,
-  message,
-  InputNumber,
-  Image,
-  Upload,
-  Col,
-  Row,
-  Carousel,
-  notification,
-} from "antd";
-import { MdImageNotSupported } from "react-icons/md";
-import { MdAdd, MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
+import { Space, Input, Select, Button, Row, Col, message } from "antd";
 import MainPage from "../../component/layout/MainPage";
-import { configStore } from "../../store/configStore";
-import { configs } from "../../util/config";
-
-import { responsiveArray } from "antd/es/_util/responsiveObserver";
-import { Content } from "antd/es/layout/layout";
 import ProductCard from "../../component/productCard/ProductCard";
-import ListCard from "../../component/listCard/ListCard";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { configStore } from "../../store/configStore";
+import PrintInvoice from "../../component/PrintInvoice/PrintInvoice";
 
 export default function PosPage() {
-  //   const { category } = configStore().config;
-  //   const {category,role}=config;
-  const [settings, setSettings] = useState({
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
+  const [loadingPrint, setLoadingPrint] = useState(false);
+  const refInvoice = useRef(null);
+  const handlePrint = useReactToPrint({
+    contentRef: refInvoice, // Reference to PrintInvoice component
+    onBeforePrint: useCallback(() => {
+      console.log("`onBeforePrint` called");
+      return Promise.resolve();
+    }, []),
+    onAfterPrint: useCallback(() => {
+      console.log("`onAfterPrint` called");
+    }, []),
+    onPrintError: useCallback(() => {
+      console.log("`onPrintError` called");
+    }, []),
   });
 
-  const { list_cart, config, addItemToCart, cartSummary } = configStore();
+  const {
+    list_cart,
+    config,
+    addItemToCart,
+    cartSummary,
+    globalState,
+    setOpen,
+    setChildrenDrawer,
+    clearCart,
+    clearGlobalState,
+    setGlobal,
+    setInv,
+    inv,
+  } = configStore();
+
   const summary = cartSummary();
 
-  const [form] = Form.useForm();
   const [state, setState] = useState({
     loading: false,
     visibleModule: false,
-    list: [],
-    image: [],
-    total: [],
+    // list: [],
+    // image: [],
+    // total: [],
   });
 
-  const refPage = React.useRef(1);
+  const setOnCheckOutClick = configStore((state) => state.setOnCheckOutClick);
+  const setOnCheckCloseDrawer = configStore(
+    (state) => state.setOnCheckCloseDrawer
+  );
+  const setOnChildrenDrawerClose = configStore(
+    (state) => state.setOnChildrenDrawerClose
+  );
+  const setHolderPrint = configStore((state) => state.setHolderPrint);
+  var res;
+
+  useEffect(() => {
+    if (inv && inv.order_no) {
+      handlePrint(); // Trigger print when inv is populated
+    }
+  }, [inv]);
 
   useEffect(() => {
     getlist();
-  }, []);
 
-  // State to manage the filter values
+    setOnCheckCloseDrawer(() => {
+      setOpen(false);
+    });
+
+    setOnChildrenDrawerClose(() => {
+      setChildrenDrawer(false);
+    });
+
+    setOnCheckOutClick(async () => {
+      try {
+        let order_detail = list_cart.map((item) => {
+          let total = Number(item.cart_qty) * Number(item.price);
+          if (item.discount != null && item.discount !== 0) {
+            total -= (total * Number(item.discount)) / 100;
+          }
+          return {
+            product_id: Number(item.id),
+            qty: Number(item.cart_qty).toFixed(0),
+            price: Number(item.price).toFixed(2),
+            discount:
+              item.discount != null ? Number(item.discount).toFixed(2) : null,
+            total: Number(total).toFixed(2),
+          };
+        });
+
+        // Prepare order parameters
+        const param = {
+          order: {
+            customer_id: globalState.customer_id,
+            total_amount: summary.total,
+            paid_amount: globalState.paid_amount,
+            payment_method: globalState.payment_method,
+            remark: globalState.remark,
+          },
+          order_detail: order_detail,
+        };
+        // handlePrint();
+        // console.log(param);
+
+        // API call for order creation
+        res = await request("order", "post", param);
+
+        if (res) {
+          await setInv({
+            order_no: res.order?.order_no,
+            order_date: res.order?.create_at,
+            customer: res.customer?.name,
+          });
+          console.log("_______________TESTING_________2_________");
+          console.log(inv.customer);
+          console.log(inv.order_no);
+          console.log(inv.order_date);
+
+          getlist();
+          message.success("Order created successfully !");
+          clearCart();
+          clearGlobalState();
+          setOpen(false);
+          setChildrenDrawer(false);
+        } else {
+          message.error("Order not completed!");
+        }
+      } catch (error) {
+        message.error("Error while creating order: " + error.message);
+      } // Trigger the Order function on checkout click
+    });
+  }, [
+    list_cart,
+    summary.total,
+    globalState,
+    setOpen,
+    setChildrenDrawer,
+    setHolderPrint,
+    setOnCheckOutClick,
+    setOnCheckCloseDrawer,
+    setGlobal,
+    loadingPrint,
+  ]);
+
   const [filter, setFilter] = useState({
     txt_search: "",
     category_id: "",
     brand: "",
   });
 
-  // Function to fetch the list based on the filter
+  // const Order =
+
   const getlist = async () => {
     try {
-      // Construct the parameters for the request based on the filter
-      var param = {
-        ...filter,
-        page: refPage.current, // get value
-        is_list_all: 1,
-        // txt_search: filter.txt_search,
-        // category_id: filter.category_id,
-        // brand: filter.brand,
-        // page: filter.page,
-      };
-
+      const param = { ...filter, is_list_all: 1 };
       const res = await request("product", "get", param);
 
       if (res && !res.error && Array.isArray(res.list)) {
-        console.log(res.list);
-        if (res.list?.length === 1) {
-          onAddToBag(res.list[0]);
-          return;
+        if (res.list.length === 1) {
+          // Automatically add the item to the cart if only one item is returned
+          addItemToCart(res.list[0]);
+        } else {
+          setState((prev) => ({ ...prev, list: res.list }));
         }
-
-        setState((pre) => ({
-          ...pre,
-          list: res.list,
-          total: refPage.current === 1 ? res.total : pre.total,
-        }));
       } else {
-        r("Unexpected response structure:", res); // Handle unexpected structure
+        console.error("Unexpected response structure:", res);
       }
     } catch (error) {
-      console.error("Failed to fetch categories:", error); // Catch any request-related errors
+      console.error("Failed to fetch product list:", error);
     }
   };
 
   const onAddToBag = (item) => {
     try {
-      // Add item to cart
       addItemToCart(item);
-      notification.info({
-        message: "Item Added to Cart",
-        description: `${item.name || "Item"} added to your cart successfully!`,
-        icon: (
-          <InfoCircleOutlined
-            style={{
-              color: "#108ee9",
-            }}
-          />
-        ),
-        placement: "top",
-        duration: 2,
-      });
     } catch (error) {
       console.error("Error adding item to cart:", error);
-
-      // Display error notification
-      notification.error({
-        message: "Error",
-        description: "There was an error adding the item to the cart.",
-        icon: (
-          <InfoCircleOutlined
-            style={{
-              color: "#ff4d4f",
-            }}
-          />
-        ),
-        placement: "top",
-        duration: 3,
-      });
     }
-  };
-
-  const onwishlist = (item) => {
-    // alert("Hello")
-    // alert(JSON.stringify(item));
-    handleWishlist(item);
   };
 
   const btnFilter = () => {
@@ -156,24 +189,37 @@ export default function PosPage() {
 
   return (
     <MainPage loading={state.loading}>
+      <div className="hidden">
+        <Button onClick={handlePrint}>Print Invoice</Button>
+        <PrintInvoice
+          ref={refInvoice}
+          list_cart={list_cart}
+          customer={inv.customer || "No customer"}
+          order_no={inv.order_no || "No order number"}
+          order_date={inv.order_date || "No order date"}
+          paid_amount={globalState.paid_amount}
+          payment_method={globalState.payment_method}
+          total_amount={summary.total}
+          remark={globalState.remark}
+        />
+      </div>
+      {/* <h1>{inv.customer}</h1>
+      <h1>{inv.order_no}</h1>
+      <h1>{inv.order_date}</h1> */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           paddingBottom: "10px",
         }}
-        className=""
       >
         <Space>
-          <div>Category {state.total}</div>
+          <div>Pos {state.total}</div>
           <Input.Search
             onSearch={getlist}
             allowClear
-            onChange={(event) =>
-              setFilter((p) => ({
-                ...p,
-                txt_search: event.target.value,
-              }))
+            onChange={(e) =>
+              setFilter({ ...filter, txt_search: e.target.value })
             }
             placeholder="Search"
           />
@@ -182,45 +228,26 @@ export default function PosPage() {
             placeholder="Category"
             allowClear
             options={config.category}
-            onChange={(id) => {
-              // alert(id);
-              setFilter((p) => ({
-                ...p,
-                category_id: id,
-              }));
-            }}
+            onChange={(id) => setFilter({ ...filter, category_id: id })}
           />
           <Select
             style={{ width: 200 }}
             placeholder="Brand"
             allowClear
             options={config.brand}
-            onChange={(id) =>
-              setFilter((p) => ({
-                ...p,
-                brand: id,
-              }))
-            }
+            onChange={(id) => setFilter({ ...filter, brand: id })}
           />
           <Button onClick={btnFilter} type="primary">
             Filter
           </Button>
         </Space>
       </div>
-      <div className="">
-        <Row
-          gutter={[
-            { xs: 2, sm: 4, md: 6, lg: 12, xl: 16 },
-            { xs: 2, sm: 4, md: 6, lg: 12, xl: 16 },
-          ]}
-        >
+
+      <div>
+        <Row gutter={[16, 16]}>
           {state.list?.map((item, index) => (
             <Col key={index} xs={24} sm={24} md={12} lg={8} xl={6} xxl={4}>
-              <ProductCard
-                {...item}
-                onAddToBag={() => onAddToBag(item)}
-                // onwishlist={() => onwishlist(item)}
-              />
+              <ProductCard {...item} onAddToBag={() => onAddToBag(item)} />
             </Col>
           ))}
         </Row>

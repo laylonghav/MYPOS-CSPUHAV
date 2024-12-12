@@ -1,0 +1,5 @@
+[02/12/2024 17:39:30] Error: Unknown column 'name' in 'field list'
+[02/12/2024 18:12:30] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`order_detail`, CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`))
+[02/12/2024 18:12:36] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`order_detail`, CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`))
+[02/12/2024 18:14:48] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`order_detail`, CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`))
+[02/12/2024 18:14:53] Error: Cannot delete or update a parent row: a foreign key constraint fails (`mypos_cspuhav`.`order_detail`, CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`))

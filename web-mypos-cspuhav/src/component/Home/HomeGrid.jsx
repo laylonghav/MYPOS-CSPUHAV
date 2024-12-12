@@ -16,7 +16,14 @@ export default function HomeGrid({ data = [] }) {
             }}
           >
             <div style={{ fontSize: 26, fontWeight: "bold" }}>{item.title}</div>
-            <div>{item.obj?.total}</div>
+            {/* <div>{item?.total}</div> */}
+            {item.summary && Object.keys(item.summary).map((key,index)=>(
+              <div key={index}>
+                <div>
+                  {key} : {item.summary[key]}
+                </div>
+              </div>
+            ))}
           </div>
         </Col>
       ))}

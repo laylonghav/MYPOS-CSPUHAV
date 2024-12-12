@@ -21,6 +21,10 @@ exports.getlist = async (req, res) => {
     const [supplier] = await db.query(
       "select id as value,name as label,code from supplier"
     );
+    const [customer] = await db.query(
+      "SELECT `id` AS value, CONCAT(`name`, ' - ', `tel`) AS label, `tel`, `email`, `address`, `type`, `create_by`, `create_at` FROM `customer`"
+    );
+
     let sql = `
   SELECT p.id AS value, 
          p.supplier_id,  
@@ -89,6 +93,7 @@ exports.getlist = async (req, res) => {
       brand,
       expense_type,
       Purchase,
+      customer,
     });
   } catch (error) {
     logError("config.getlist", error, res);

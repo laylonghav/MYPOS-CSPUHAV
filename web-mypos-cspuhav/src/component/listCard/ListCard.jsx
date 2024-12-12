@@ -13,6 +13,7 @@ export default function ListCard({
   brand,
   description,
   cart_qty,
+  qty,
   price,
   discount,
   status,
