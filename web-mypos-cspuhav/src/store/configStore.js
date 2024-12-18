@@ -28,6 +28,7 @@ export const configStore = create((set, get) => ({
     role: null,
     supplier: null,
     product: null,
+    expense_type: null,
     purchase_status: null,
     brand: null,
     Purchase: null,

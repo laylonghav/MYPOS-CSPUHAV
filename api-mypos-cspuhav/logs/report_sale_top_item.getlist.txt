@@ -1,0 +1,8 @@
+[19/12/2024 02:21:12] Error: Unknown column 'od.create_at' in 'where clause'
+[19/12/2024 02:21:12] Error: Unknown column 'od.create_at' in 'where clause'
+[19/12/2024 02:22:16] Error: Unknown column 'od.create_at' in 'where clause'
+[19/12/2024 02:22:16] Error: Unknown column 'od.create_at' in 'where clause'
+[19/12/2024 02:37:25] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':from_date AND :to_date  GROUP BY p.id, p.name, p.image ORDER BY total_sales_...' at line 1
+[19/12/2024 02:37:25] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':from_date AND :to_date  GROUP BY p.id, p.name, p.image ORDER BY total_sales_...' at line 1
+[19/12/2024 02:37:35] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':from_date AND :to_date  GROUP BY p.id, p.name, p.image ORDER BY total_sales_...' at line 1
+[19/12/2024 02:37:35] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':from_date AND :to_date  GROUP BY p.id, p.name, p.image ORDER BY total_sales_...' at line 1

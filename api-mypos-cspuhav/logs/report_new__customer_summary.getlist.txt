@@ -1,0 +1,41 @@
+[19/12/2024 00:02:01] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:04:36] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:04:36] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:05:24] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:05:24] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:05:55] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:05:57] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:05:58] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:06:00] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:06:01] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:06:02] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:40] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:40] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:57] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:08:57] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'from customer c  where DATE_FORMAT(c.create_at, '%Y-%m-%d') between '2024-12-...' at line 1
+[19/12/2024 00:58:57] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.id' at line 1
+[19/12/2024 00:58:57] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.id' at line 1
+[19/12/2024 01:04:19] Error: Invalid use of group function
+[19/12/2024 01:04:19] Error: Invalid use of group function
+[19/12/2024 01:10:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name' at line 1
+[19/12/2024 01:10:31] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name' at line 1
+[19/12/2024 01:10:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name' at line 1
+[19/12/2024 01:10:38] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name' at line 1
+[19/12/2024 01:11:57] Error: Invalid use of group function
+[19/12/2024 01:11:57] Error: Invalid use of group function
+[19/12/2024 01:12:01] Error: Invalid use of group function
+[19/12/2024 01:12:01] Error: Invalid use of group function
+[19/12/2024 01:14:42] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[19/12/2024 01:14:42] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[19/12/2024 01:15:50] Error: Invalid use of group function
+[19/12/2024 01:15:50] Error: Invalid use of group function
+[19/12/2024 01:22:55] Error: Invalid use of group function
+[19/12/2024 01:22:55] Error: Invalid use of group function
+[19/12/2024 01:31:28] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMAT(c.cre...' at line 1
+[19/12/2024 01:31:28] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMAT(c.cre...' at line 1
+[19/12/2024 01:32:51] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMA...' at line 1
+[19/12/2024 01:32:51] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'c.name FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMA...' at line 1
+[19/12/2024 01:47:00] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMAT(c.cre...' at line 1
+[19/12/2024 01:47:00] Error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM customer c  WHERE (NULL IS NULL OR c.name = NULL)  AND DATE_FORMAT(c.cre...' at line 1

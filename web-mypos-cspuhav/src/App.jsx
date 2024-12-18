@@ -25,6 +25,8 @@ import OrderPage from "./page/order/OrderPage";
 import PdfViewerComponent from "./page/pdf/PdfViewerComponent";
 import SaleSummaryPage from "./page/report/SaleSummaryPage";
 import ExpenseSummaryPage from "./page/report/ExpenseSummaryPage";
+import CustomerSummaryPage from "./page/report/CustomerSummaryPage";
+import TopSaleSummaryPage from "./page/report/TopSaleSummaryPage";
 
 
 function App() {
@@ -49,6 +51,8 @@ function App() {
           <Route path="/view-pdf" element={<PdfViewerComponent />} />
           <Route path="/sale" element={<SaleSummaryPage />} />
           <Route path="/expense_summary" element={<ExpenseSummaryPage />} />
+          <Route path="/new_customer" element={<CustomerSummaryPage />} />
+          <Route path="/top_sale" element={<TopSaleSummaryPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />
         </Route>
 

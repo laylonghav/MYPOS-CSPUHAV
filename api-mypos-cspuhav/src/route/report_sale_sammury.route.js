@@ -13,13 +13,13 @@ module.exports = (app)=>{
       report.report_expense_summary
     );
     app.get(
-      "/api/report_expense_summary",
+      "/api/report_new__customer_summary",
       validate_token(),
-      report.report_sale_summary
+      report.report_new__customer_summary
     );
     app.get(
       "/api/report_sale_top_item",
       validate_token(),
-      report.report_sale_summary
+      report.report_sale_top_item
     );
 }

@@ -1,0 +1,7 @@
+[19/12/2024 00:53:58] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:53:58] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:53:59] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:54:00] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:54:29] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:54:33] Error: Duplicate entry '03334445555' for key 'tel'
+[19/12/2024 00:55:19] Error: Duplicate entry '03334445555' for key 'tel'

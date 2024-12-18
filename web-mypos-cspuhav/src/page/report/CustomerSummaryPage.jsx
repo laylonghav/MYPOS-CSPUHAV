@@ -1,18 +1,18 @@
 
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
-import { Table, DatePicker, Space, Select, Button } from "antd";
+import { Table, DatePicker, Space, Select, Button, Input } from "antd";
 import dayjs from "dayjs";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
 
-export default function SaleSummaryPage() {
+export default function CustomerSummaryPage() {
   const { config } = configStore();
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({
     from_date: dayjs().subtract(6, "d").format("YYYY-MM-DD"),
     to_date: dayjs().format("YYYY-MM-DD"),
-    expense_type_id: null,
+    name: null,
   });
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function SaleSummaryPage() {
 
   const getList = async () => {
     try {
-      const res = await request("report_expense_summary", "get", filter);
+      const res = await request("report_new__customer_summary", "get", filter);
       if (res && !res.error) {
         setList(res.list);
         console.log(res.list);
@@ -48,19 +48,21 @@ export default function SaleSummaryPage() {
       key: "title",
     },
     {
-      title: "Expense type name",
-      dataIndex: "expense_type_name",
-      key: "expense_type_name",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => (
+        <div>
+          {text.split(", ").map((name, index) => (
+            <div key={index}>{name}</div> // Render each name in a new line
+          ))}
+        </div>
+      ),
     },
     {
       title: "Total Amount",
       dataIndex: "total_amount",
       key: "total_amount",
-      render: (value) =>
-        parseFloat(value).toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        }),
     },
   ];
 
@@ -68,7 +70,7 @@ export default function SaleSummaryPage() {
     setFilter({
       from_date: dayjs().subtract(6, "d").format("YYYY-MM-DD"),
       to_date: dayjs().format("YYYY-MM-DD"),
-      expense_type_id: null,
+      name: null,
     });
   };
 
@@ -77,7 +79,7 @@ export default function SaleSummaryPage() {
       <div className="border-2 border-blue-700 p-4">
         <div className="bg-slate-700 p-4 text-white text-2xl">
           <Space>
-            <div>Expense Summary</div>
+            <div>New customer Summary</div>
             <DatePicker.RangePicker
               allowClear={false}
               defaultValue={[
@@ -92,17 +94,16 @@ export default function SaleSummaryPage() {
                 }));
               }}
             />
-            <Select
-              style={{ width: 200 }}
-              placeholder="Expense type"
+            <Input.Search
+              onSearch={getList}
               allowClear
-              options={config?.expense_type}
-              onChange={(id) =>
-                setFilter((prev) => ({
-                  ...prev,
-                  expense_type_id: id,
+              onChange={(event) =>
+                setFilter((p) => ({
+                  ...p,
+                  name: event.target.value,
                 }))
               }
+              placeholder="Search"
             />
 
             <Button

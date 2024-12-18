@@ -41,16 +41,126 @@ exports.report_sale_summary = async (req, res) => {
 exports.report_expense_summary = async (req, res) => {
   try {
     let { from_date, to_date, expense_type_id } = req.query;
-  
-     
-    const [list] = await db.query(sql, {
-     
-    });
+
+    // let sql =
+    //   "select" +
+    //   " DATE_FORMAT(e.expense_date, '%d/%m/%Y') title," +
+    //   " sum(e.amount) total_amount" +
+    //   " from expense e " +
+    //   " where DATE_FORMAT(e.expense_date, '%Y-%m-%d') between :from_date and :to_date " +
+    //   " and (:expense_type_id is null or e.expense_type_id = :expense_type_id) " +
+    //   " group by e.expense_date ";
+
+    let sql =
+      "select" +
+      " DATE_FORMAT(e.expense_date, '%d/%m/%Y') title," +
+      " sum(e.amount) total_amount," +
+      " et.name expense_type_name" + // Include the expense type name
+      " from expense e " +
+      " left join expense_type et on e.expense_type_id = et.id " + // Join with the expense_type table
+      " where DATE_FORMAT(e.expense_date, '%Y-%m-%d') between :from_date and :to_date " +
+      " and (:expense_type_id is null or e.expense_type_id = :expense_type_id) " +
+      " group by e.expense_date, et.name "; // Group by expense_date and expense_type name
+
+    const [list] = await db.query(sql, { from_date, to_date, expense_type_id });
+    // console.log(list);
 
     res.json({
       list: list,
     });
   } catch (error) {
     logError("report_expense_summary.getlist", error, res);
+  }
+};
+exports.report_new__customer_summary = async (req, res) => {
+  try {
+    let { from_date, to_date, name } = req.query;
+
+    let sql =
+      "SELECT" +
+      " DATE_FORMAT(c.create_at, '%d/%m/%Y') AS title," +
+      " COUNT(c.id) AS total_amount , GROUP_CONCAT(c.name SEPARATOR ', ') AS name" + // Sum of COUNT(c.id)
+      " FROM customer c " +
+      " WHERE (:name IS NULL OR c.name = :name) " +
+      " AND DATE_FORMAT(c.create_at, '%Y-%m-%d') BETWEEN :from_date AND :to_date " +
+      " GROUP BY DATE_FORMAT(c.create_at, '%Y-%m-%d')";
+
+    const [list] = await db.query(sql, { from_date, to_date, name });
+
+    res.json({
+      list: list,
+    });
+  } catch (error) {
+    logError("report_new__customer_summary.getlist", error, res);
+  }
+};
+
+// exports.report_sale_top_item = async (req, res) => {
+//   try {
+//     const { from_date, to_date } = req.body; // Assuming dates are sent in the body of the request
+
+//     let sql =
+//       "SELECT" +
+//       " p.id AS product_id," +
+//       " p.name AS product_name," +
+//       " p.image AS product_image," +
+//       " SUM(od.qty * od.price) AS total_sales_amount" +
+//       " FROM" +
+//       " product p" +
+//       " JOIN" +
+//       " order_detail od ON p.id = od.product_id" +
+//       " WHERE" +
+//       " DATE_FORMAT(od.create_at, '%Y-%m-%d') BETWEEN :from_date AND :to_date" + // Add the date filter condition
+//       " GROUP BY" +
+//       " p.id, p.name, p.image" +
+//       " ORDER BY" +
+//       " total_sales_amount DESC" +
+//       " LIMIT 10;";
+
+      
+//       // Pass the dates to the query
+//       const [list] = await db.query(sql, { from_date, to_date });
+      
+//       console.log(list)
+//     res.json({
+//       list: list,
+//     });
+//   } catch (error) {
+//     logError("report_sale_top_item.getlist", error, res);
+//   }
+// };
+
+
+exports.report_sale_top_item = async (req, res) => {
+  try {
+    const { from_date, to_date } = req.query; // Assuming dates are sent in the body of the request
+
+    let sql =
+      "SELECT" +
+      " p.id AS product_id," +
+      " p.name AS product_name," +
+      " p.image AS product_image," +
+      " SUM(od.qty * od.price) AS total_sales_amount" +
+      " FROM" +
+      " product p" +
+      " JOIN" +
+      " order_detail od ON p.id = od.product_id" +
+      " WHERE" +
+      " DATE_FORMAT(od.create_at, '%Y-%m-%d') BETWEEN :from_date AND :to_date " + // Use ? placeholder for parameterized query
+      " GROUP BY" +
+      " p.id, p.name, p.image" +
+      " ORDER BY" +
+      " total_sales_amount DESC" +
+      " LIMIT 10;";
+
+    // Pass the dates as an array of values to the query
+    const [list] = await db.query(sql, {from_date, to_date});
+
+    console.log(list); // Optional for debugging
+    res.json({
+      list: list,
+    });
+  } catch (error) {
+    logError("report_sale_top_item.getlist", error, res);
   }
 };

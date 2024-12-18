@@ -1,18 +1,17 @@
-
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
-import { Table, DatePicker, Space, Select, Button } from "antd";
+import { Table, DatePicker, Space, Button, Input, Image } from "antd";
 import dayjs from "dayjs";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
+import { configs } from "../../util/config";
 
-export default function SaleSummaryPage() {
+export default function TopSaleSummaryPage() {
   const { config } = configStore();
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({
     from_date: dayjs().subtract(6, "d").format("YYYY-MM-DD"),
     to_date: dayjs().format("YYYY-MM-DD"),
-    expense_type_id: null,
   });
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export default function SaleSummaryPage() {
 
   const getList = async () => {
     try {
-      const res = await request("report_expense_summary", "get", filter);
+      const res = await request("report_sale_top_item", "get", filter);
       if (res && !res.error) {
         setList(res.list);
         console.log(res.list);
@@ -32,35 +31,43 @@ export default function SaleSummaryPage() {
   };
 
   const chartData = [
-    ["Date", "Total Amount"],
-    ...list.map((item) => [item.title, parseFloat(item.total_amount)]),
+    ["Product", "Total Sales Amount"],
+    ...list.map((item) => [
+      item.product_name,
+      parseFloat(item.total_sales_amount),
+    ]),
   ];
 
   const chartOptions = {
     curveType: "function",
     legend: { position: "bottom" },
+    hAxis: { title: "Product" },
+    vAxis: { title: "Sales Amount" },
   };
 
   const columns = [
     {
-      title: "Date",
-      dataIndex: "title",
-      key: "title",
+      title: "Product Name",
+      dataIndex: "product_name",
+      key: "product_name",
     },
     {
-      title: "Expense type name",
-      dataIndex: "expense_type_name",
-      key: "expense_type_name",
+      title: "Product Image",
+      dataIndex: "product_image",
+      key: "product_image",
+      render: (text) => (
+        <Image
+          src={configs.image_Path + text}
+          alt="Product"
+          style={{ width: 50 }}
+        />
+      ),
     },
     {
-      title: "Total Amount",
-      dataIndex: "total_amount",
-      key: "total_amount",
-      render: (value) =>
-        parseFloat(value).toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        }),
+      title: "Total Sales Amount",
+      dataIndex: "total_sales_amount",
+      key: "total_sales_amount",
+      render: (text) => `$${parseFloat(text).toFixed(2)}`,
     },
   ];
 
@@ -68,7 +75,6 @@ export default function SaleSummaryPage() {
     setFilter({
       from_date: dayjs().subtract(6, "d").format("YYYY-MM-DD"),
       to_date: dayjs().format("YYYY-MM-DD"),
-      expense_type_id: null,
     });
   };
 
@@ -77,7 +83,7 @@ export default function SaleSummaryPage() {
       <div className="border-2 border-blue-700 p-4">
         <div className="bg-slate-700 p-4 text-white text-2xl">
           <Space>
-            <div>Expense Summary</div>
+            <div>Top Sales Summary</div>
             <DatePicker.RangePicker
               allowClear={false}
               defaultValue={[
@@ -92,19 +98,6 @@ export default function SaleSummaryPage() {
                 }));
               }}
             />
-            <Select
-              style={{ width: 200 }}
-              placeholder="Expense type"
-              allowClear
-              options={config?.expense_type}
-              onChange={(id) =>
-                setFilter((prev) => ({
-                  ...prev,
-                  expense_type_id: id,
-                }))
-              }
-            />
-
             <Button
               onClick={handleReset}
               type="default"
@@ -116,7 +109,7 @@ export default function SaleSummaryPage() {
         </div>
 
         <div className="my-4">
-          {list.length > 0 && (
+          {list.length > 0 ? (
             <Chart
               className="h-[500px]"
               chartType="LineChart"
@@ -125,6 +118,8 @@ export default function SaleSummaryPage() {
               options={chartOptions}
               legendToggle
             />
+          ) : (
+            <p>No data available for the selected date range.</p>
           )}
         </div>
       </div>
@@ -133,9 +128,10 @@ export default function SaleSummaryPage() {
         <Table
           columns={columns}
           dataSource={list}
-          rowKey={(record) => `${record.title}-${record.total_qty}`}
+          rowKey={(record) => record.product_id}
           bordered
           pagination={{ pageSize: 5 }}
+          locale={{ emptyText: "No data available" }}
         />
       </div>
     </div>
