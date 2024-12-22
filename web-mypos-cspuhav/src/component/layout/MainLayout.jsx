@@ -48,6 +48,7 @@ import {
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import {
+  getPermission,
   getProfile,
   setAccessToken,
   setProfile,
@@ -67,7 +68,7 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
-const items = [
+const items_menu = [
   {
     key: "",
     icon: <PieChartOutlined />,
@@ -93,7 +94,7 @@ const items = [
     children: null,
   },
   {
-    key: "product",
+    // key: "product",
     icon: <ProductOutlined />,
     label: "Product",
     children: [
@@ -104,7 +105,7 @@ const items = [
         label: "List Product",
       },
       {
-        key: "/category",
+        key: "category",
         icon: <GroupOutlined />,
         children: null,
         label: "Category",
@@ -112,7 +113,7 @@ const items = [
     ],
   },
   {
-    key: "purchase",
+    // key: "purchase",
     icon: <ShoppingCartOutlined />,
     label: "Purchase",
     children: [
@@ -137,18 +138,18 @@ const items = [
     ],
   },
   {
-    key: "expense",
+    // key: "expense",
     icon: <ShoppingOutlined />,
     label: "Expense",
     children: [
       {
-        key: "expense_type",
+        key: "expanse_type",
         icon: <ShoppingOutlined />,
         children: null,
         label: "Expense Type",
       },
       {
-        key: "expense",
+        key: "expanse",
         icon: <ShoppingOutlined />,
         children: null,
         label: "Expense",
@@ -156,7 +157,7 @@ const items = [
     ],
   },
   {
-    key: "employee",
+    // key: "employee",
     icon: <TeamOutlined />,
     label: "Employee",
     children: [
@@ -175,12 +176,13 @@ const items = [
     ],
   },
   {
-    key: "report",
+    // key: "report_sale_summary",
     icon: <TeamOutlined />,
     label: "Report",
     children: [
       {
-        key: "sale",
+        // key: "sale",
+        key: "report_sale_summary",
         icon: <TeamOutlined />,
         children: null,
         label: "Sale",
@@ -192,33 +194,33 @@ const items = [
         label: "Top Sale",
       },
       {
-        key: "expense_summary",
+        key: "report_expense_summary",
         icon: <TeamOutlined />,
         children: null,
         label: "Expense",
       },
-      {
-        key: "purchase",
-        icon: <TeamOutlined />,
-        children: null,
-        label: "Purchase",
-      },
+      // {
+      //   key: "purchase",
+      //   icon: <TeamOutlined />,
+      //   children: null,
+      //   label: "Purchase",
+      // },
       {
         key: "new_customer",
         icon: <TeamOutlined />,
         children: null,
         label: "New Customer",
       },
-      {
-        key: "payroll",
-        icon: <PayCircleOutlined />,
-        children: null,
-        label: "Payroll",
-      },
+      // {
+      //   key: "payroll",
+      //   icon: <PayCircleOutlined />,
+      //   children: null,
+      //   label: "Payroll",
+      // },
     ],
   },
   {
-    key: "user",
+    // key: "user",
     icon: <UserOutlined />,
     label: "User",
     children: [
@@ -243,7 +245,7 @@ const items = [
     ],
   },
   {
-    key: "sitting",
+    // key: "sitting",
     icon: <SettingOutlined />,
     label: "Sitting",
     children: [
@@ -264,6 +266,7 @@ const items = [
 ];
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [items, setItems] = useState([]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -273,6 +276,7 @@ const MainLayout = () => {
   // const [childrenDrawer1, setChildrenDrawer] = useState(false);
 
   const profile = getProfile();
+  const permission = getPermission();
 
   const navigate = useNavigate();
   const {
@@ -317,11 +321,45 @@ const MainLayout = () => {
   });
 
   useEffect(() => {
+    getMenuByUser();
     getconfigapi();
     if (!profile) {
       navigate("/login");
     }
   }, []);
+
+  const getMenuByUser = () => {
+    let new_item_menu = [];
+    // level one
+    items_menu?.map((item1) => {
+      // is not exist in permission
+      const p1 = permission?.findIndex(
+        (data1) => data1.web_route_key == "/" + item1.key
+      ); // -1 | 0,1`,3.....
+      if (p1 != -1) {
+        new_item_menu.push(item1);
+      }
+
+      // level two
+      if (item1?.children && item1?.children.length > 0) {
+        let childTmp = [];
+        item1?.children.map((data1) => {
+          permission?.map((data2) => {
+            if (data2.web_route_key == "/" + data1.key) {
+              childTmp.push(data1);
+            }
+          });
+        });
+        if (childTmp.length > 0) {
+          item1.children = childTmp; // update new child dreen
+          new_item_menu.push(item1);
+        }
+      }
+    });
+    // permission?.map((item)=>{
+    // })
+    setItems(new_item_menu);
+  };
 
   const getconfigapi = async () => {
     try {
@@ -478,6 +516,15 @@ const MainLayout = () => {
         />
       </Sider>
       <Layout>
+        {/* <div>
+           {permission?.map((item, index) => (
+             <div key={index}>
+               <div className="">
+                 {item.name}:{item.web_route_key}
+               </div>
+             </div>
+           ))}
+         </div> */}
         <div className="admin-header">
           <div className="admin-header-g1">
             <div className="">

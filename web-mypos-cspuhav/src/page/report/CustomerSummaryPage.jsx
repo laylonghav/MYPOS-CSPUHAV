@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
-import { Table, DatePicker, Space, Select, Button, Input } from "antd";
+import { Table, DatePicker, Space, Button, Input } from "antd";
 import dayjs from "dayjs";
 import { request } from "../../util/helper";
 import { configStore } from "../../store/configStore";
@@ -37,8 +36,11 @@ export default function CustomerSummaryPage() {
   ];
 
   const chartOptions = {
-    curveType: "function",
-    legend: { position: "bottom" },
+    title: "New Customer Summary",
+    chartArea: { width: "50%" },
+    hAxis: { title: "Total Amount", minValue: 0 },
+    vAxis: { title: "Date" },
+    legend: { position: "none" },
   };
 
   const columns = [
@@ -54,7 +56,7 @@ export default function CustomerSummaryPage() {
       render: (text) => (
         <div>
           {text.split(", ").map((name, index) => (
-            <div key={index}>{name}</div> // Render each name in a new line
+            <div key={index}>{name}</div>
           ))}
         </div>
       ),
@@ -79,7 +81,7 @@ export default function CustomerSummaryPage() {
       <div className="border-2 border-blue-700 p-4">
         <div className="bg-slate-700 p-4 text-white text-2xl">
           <Space>
-            <div>New customer Summary</div>
+            <div>New Customer Summary</div>
             <DatePicker.RangePicker
               allowClear={false}
               defaultValue={[
@@ -105,7 +107,6 @@ export default function CustomerSummaryPage() {
               }
               placeholder="Search"
             />
-
             <Button
               onClick={handleReset}
               type="default"
@@ -120,7 +121,7 @@ export default function CustomerSummaryPage() {
           {list.length > 0 && (
             <Chart
               className="h-[500px]"
-              chartType="LineChart"
+              chartType="BarChart"
               width="100%"
               data={chartData}
               options={chartOptions}

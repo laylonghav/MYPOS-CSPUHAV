@@ -88,7 +88,7 @@ exports.login = async (req, res) => {
         delete data[0].password;
         let obj = {
           profile: data[0],
-          permision: ["view_all", "delete", "edit"],
+          permission: await getPermissionByUser(data[0].id),
         };
         return res.json({
           message: "Login success",
@@ -154,6 +154,8 @@ exports.validate_token = () => {
   };
 };
 
+
+
 // const getAccessToken = async () => {
 //   // const keyToken = "2142tegfgdfg645646";
 //   const data = {
@@ -179,4 +181,23 @@ const getAccessToken = async (paramData) => {
     }
   );
   return acess_token;
+};
+
+
+const getPermissionByUser = async (user_id) => {
+  let sql = 
+  "select"+ 
+  " distinct"+
+  " p.id,"+
+  " p.name,"+
+  " p.group,"+
+  " p.is_menu_web,"+
+  " p.web_route_key"+
+  " from permissions p"+
+  " inner join permission_roles pr on p.id = pr.permission_id"+
+  " inner join role r on pr.role_id = r.id"+
+  " inner join user_roles ur on r.id = ur.role_id"+
+  " where ur.user_id = :user_id";
+  const [permission] = await db.query(sql, { user_id: user_id });
+  return permission;
 };

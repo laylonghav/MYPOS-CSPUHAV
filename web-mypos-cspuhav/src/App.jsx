@@ -42,15 +42,18 @@ function App() {
           <Route path="/user" element={<UserPage />} />
           <Route path="/role" element={<RolePage />} />
           <Route path="/product" element={<ProductPage />} />
-          <Route path="/expense" element={<ExpensePage />} />
-          <Route path="/expense_type" element={<ExpenseTypePage />} />
+          <Route path="/expanse" element={<ExpensePage />} />
+          <Route path="/expanse_type" element={<ExpenseTypePage />} />
           <Route path="/purchase" element={<PurchasePage />} />
           <Route path="/purchase_product" element={<PurchaseProductPage />} />
           <Route path="/pos" element={<PosPage />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/view-pdf" element={<PdfViewerComponent />} />
-          <Route path="/sale" element={<SaleSummaryPage />} />
-          <Route path="/expense_summary" element={<ExpenseSummaryPage />} />
+          <Route path="/report_sale_summary" element={<SaleSummaryPage />} />
+          <Route
+            path="/report_expense_summary"
+            element={<ExpenseSummaryPage />}
+          />
           <Route path="/new_customer" element={<CustomerSummaryPage />} />
           <Route path="/top_sale" element={<TopSaleSummaryPage />} />
           <Route path="*" element={<h1>404 - Route Not Found</h1>} />

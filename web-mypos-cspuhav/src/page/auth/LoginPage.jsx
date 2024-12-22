@@ -1,14 +1,17 @@
-import { Form, Input, Button, Space } from "antd";
-import React from "react";
+import { Form, Input, Button, Space, Spin, Checkbox, Typography } from "antd";
+import React, { useState } from "react";
 import "./LoginPage.css";
 import { request } from "../../util/helper";
-import { setAccessToken, setProfile } from "../../store/profile.store";
-import { useNavigate } from "react-router-dom";
+import { setAccessToken, setPermission, setProfile } from "../../store/profile.store";
+import { Link, useNavigate } from "react-router-dom";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+const { Text } = Typography;
 
 export default function LoginPage() {
+   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const onFinish = async (item) => {
+  const handleLogin = async (item) => {
     // alert(JSON.stringify(item));
     const param = {
       username: item.username, //"laylonghav"
@@ -18,6 +21,7 @@ export default function LoginPage() {
     if (res && !res.error) {
       setAccessToken(res.access_token);
       setProfile(JSON.stringify(res.profile));
+      setPermission(JSON.stringify(res.permission));
       navigate("/");
     } else {
       alert(JSON.stringify(res));
@@ -25,33 +29,77 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>LoginPage</h1>
-      <Form
-        onFinish={onFinish}
-        layout="vertical"
-        className="FormLogin"
-        form={form}
-      >
-        <Form.Item>
-          <label htmlFor="" style={{ textAlign: "center" }}>
-            <h2>Login</h2>
-          </label>
-        </Form.Item>
-        <Form.Item name="username" label="Username">
-          <Input placeholder="username" />
-        </Form.Item>
-        <Form.Item name="password" label="Password">
-          <Input.Password placeholder="Password" />
-        </Form.Item>
-        <Form.Item>
-          <Space>
-            <Button type="primary" htmlType="submit">
-              LOGIN
+    <div
+      className="bg-gray-100 py-10 px-5 rounded-md"
+      style={{
+        maxWidth: 450,
+        margin: "200px auto",
+        textAlign: "center",
+      }}
+    >
+      <h2 className="font-bold text-2xl">Login</h2>
+
+      {/* Wrap the Form with a Spin component */}
+      <Spin spinning={loading}>
+        <Form
+          name="loginForm"
+          initialValues={{ remember: true }}
+          onFinish={handleLogin}
+          layout="vertical"
+          style={{ textAlign: "left" }}
+        >
+          {/* Username Field */}
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              { required: true, message: "Please enter your username!" },
+              // { type: "email", message: "Please enter a valid email address!" },
+            ]}
+            // {...validateUser}
+          >
+            <Input
+              allowClear
+              prefix={<UserOutlined />}
+              placeholder="Enter your email"
+            />
+          </Form.Item>
+
+          {/* Password Field */}
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please enter your password!" }]}
+            // {...validatePW}
+          >
+            <Input.Password
+              allowClear
+              prefix={<LockOutlined />}
+              placeholder="Enter your password"
+            />
+          </Form.Item>
+
+          {/* Remember Me */}
+          <Form.Item name="remember" valuePropName="checked">
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          {/* Submit Button */}
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block disabled={loading}>
+              Login
             </Button>
-          </Space>
-        </Form.Item>
-      </Form>
+          </Form.Item>
+        </Form>
+      </Spin>
+
+      {/* Register Link */}
+      <Text>
+        Don't have an account?{" "}
+        <Link to="/register" className="font-bold text-blue-500">
+          Register here
+        </Link>
+      </Text>
     </div>
   );
 }

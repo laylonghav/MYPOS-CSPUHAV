@@ -51,6 +51,13 @@ export default function SaleSummaryPage() {
       title: "Expense type name",
       dataIndex: "expense_type_name",
       key: "expense_type_name",
+      render: (text) => (
+        <div>
+          {text.split(", ").map((name, index) => (
+            <div key={index}>{name}</div> // Render each name in a new line
+          ))}
+        </div>
+      ),
     },
     {
       title: "Total Amount",

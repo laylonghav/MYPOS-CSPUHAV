@@ -55,12 +55,12 @@ exports.report_expense_summary = async (req, res) => {
       "select" +
       " DATE_FORMAT(e.expense_date, '%d/%m/%Y') title," +
       " sum(e.amount) total_amount," +
-      " et.name expense_type_name" + // Include the expense type name
+      " GROUP_CONCAT(et.name SEPARATOR ', ') expense_type_name" + // Include the expense type name
       " from expense e " +
       " left join expense_type et on e.expense_type_id = et.id " + // Join with the expense_type table
       " where DATE_FORMAT(e.expense_date, '%Y-%m-%d') between :from_date and :to_date " +
       " and (:expense_type_id is null or e.expense_type_id = :expense_type_id) " +
-      " group by e.expense_date, et.name "; // Group by expense_date and expense_type name
+      " group by e.expense_date "; // Group by expense_date and expense_type name
 
     const [list] = await db.query(sql, { from_date, to_date, expense_type_id });
     // console.log(list);
