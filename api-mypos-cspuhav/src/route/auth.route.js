@@ -4,10 +4,10 @@ const {
   login,
   profile,
   validate_token,
-} = require("../controller/auth.controller"); ;
+} = require("../controller/auth.controller");
 
 module.exports = (app) => {
-  app.get("/api/auth/get-list", validate_token(), getlist);
+  app.get("/api/auth/get-list", validate_token("user.get_list"), getlist);
   app.post("/api/auth/regester", validate_token(), regester);
   app.post("/api/auth/login", login);
   app.post("/api/auth/profile", validate_token(), profile);

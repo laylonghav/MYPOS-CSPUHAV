@@ -119,7 +119,7 @@ exports.profile = async (req, res) => {
   }
 };
 
-exports.validate_token = () => {
+exports.validate_token = (permission_name) => {
   // call in midleware in route (role route, user route, teacher route)
   return (req, res, next) => {
     var authorization = req.headers.authorization; // token from client
@@ -143,9 +143,24 @@ exports.validate_token = () => {
               error: error,
             });
           } else {
+            // check is has permission payload
+            if (permission_name) {
+              // permission with action
+              let findIndex = result.data.permission?.findIndex(
+                (item) => item.name == permission_name
+              );
+              if (findIndex == -1) {
+                // no permission permission_name
+                res.status(401).send({
+                  message: "Unauthorized",
+                  error: error,
+                });
+                return;
+              }
+            }
             req.current_id = result.data.profile.id;
             req.auth = result.data.profile; // write user property
-            req.permision = result.data.permision; // write user property
+            req.permission = result.data.permission; // write user property
             next(); // continue controller
           }
         }
@@ -153,8 +168,6 @@ exports.validate_token = () => {
     }
   };
 };
-
-
 
 // const getAccessToken = async () => {
 //   // const keyToken = "2142tegfgdfg645646";
@@ -183,21 +196,20 @@ const getAccessToken = async (paramData) => {
   return acess_token;
 };
 
-
 const getPermissionByUser = async (user_id) => {
-  let sql = 
-  "select"+ 
-  " distinct"+
-  " p.id,"+
-  " p.name,"+
-  " p.group,"+
-  " p.is_menu_web,"+
-  " p.web_route_key"+
-  " from permissions p"+
-  " inner join permission_roles pr on p.id = pr.permission_id"+
-  " inner join role r on pr.role_id = r.id"+
-  " inner join user_roles ur on r.id = ur.role_id"+
-  " where ur.user_id = :user_id";
+  let sql =
+    "select" +
+    " distinct" +
+    " p.id," +
+    " p.name," +
+    " p.group," +
+    " p.is_menu_web," +
+    " p.web_route_key" +
+    " from permissions p" +
+    " inner join permission_roles pr on p.id = pr.permission_id" +
+    " inner join role r on pr.role_id = r.id" +
+    " inner join user_roles ur on r.id = ur.role_id" +
+    " where ur.user_id = :user_id";
   const [permission] = await db.query(sql, { user_id: user_id });
   return permission;
 };

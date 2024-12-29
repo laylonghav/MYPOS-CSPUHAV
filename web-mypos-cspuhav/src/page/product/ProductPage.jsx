@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { request } from "../../util/helper";
+import { isPermission, request } from "../../util/helper";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css"; // Import Slider from react-slick
 import ViewSlider from "react-view-slider";
@@ -136,7 +136,8 @@ export default function ProductPage() {
           list: res.list,
           total: refPage.current === 1 ? res.total : pre.total,
         }));
-      } else {  r("Unexpected response structure:", res); // Handle unexpected structure
+      } else {
+        r("Unexpected response structure:", res); // Handle unexpected structure
       }
     } catch (error) {
       console.error("Failed to fetch categories:", error); // Catch any request-related errors
@@ -180,24 +181,24 @@ export default function ProductPage() {
 
     // Handle optional images
     // if (data.product_image && data.product_image.length > 0) {
-      try {
-        const res_image = await request("product_image/" + data.id, "get");
-        if (res_image && !res_image.error && res_image.list) {
-          const imageProductOptional = res_image.list.map((item, index) => ({
-            uid: index.toString(), // Ensure uid is a unique string
-            name: item.image,
-            status: "done",
-            url: configs.image_Path + item.image,
-          }));
-          setImageOptional(imageProductOptional);
-          setImageOptional_Old(imageProductOptional);
-        } else {
-          setImageOptional([]); // Clear if no optional images from response
-        }
-      } catch (error) {
-        console.error("Error fetching optional images:", error);
-        setImageOptional([]);
+    try {
+      const res_image = await request("product_image/" + data.id, "get");
+      if (res_image && !res_image.error && res_image.list) {
+        const imageProductOptional = res_image.list.map((item, index) => ({
+          uid: index.toString(), // Ensure uid is a unique string
+          name: item.image,
+          status: "done",
+          url: configs.image_Path + item.image,
+        }));
+        setImageOptional(imageProductOptional);
+        setImageOptional_Old(imageProductOptional);
+      } else {
+        setImageOptional([]); // Clear if no optional images from response
       }
+    } catch (error) {
+      console.error("Error fetching optional images:", error);
+      setImageOptional([]);
+    }
     // } else {
     //   setImageOptional([]); // Clear if no optional images
     // }
@@ -540,7 +541,7 @@ export default function ProductPage() {
         <Space>
           <div>Category {state.total}</div>
           <Input.Search
-          onSearch={getlist}
+            onSearch={getlist}
             allowClear
             onChange={(event) =>
               setFilter((p) => ({
@@ -579,10 +580,11 @@ export default function ProductPage() {
             Filter
           </Button>
         </Space>
-
-        <Button type="primary" icon={<MdAdd />} onClick={onClickNew}>
-          New
-        </Button>
+        {isPermission("product.create") && 
+          <Button type="primary" icon={<MdAdd />} onClick={onClickNew}>
+            New
+          </Button>
+        }
       </div>
       <h1>{form.getFieldValue("id")}</h1>
       <Modal
@@ -961,17 +963,22 @@ export default function ProductPage() {
             key: "Action",
             render: (item, data, index) => (
               <Space>
-                <Button
-                  type="primary"
-                  icon={<MdEdit />}
-                  onClick={() => onClickEdit(data, index)}
-                ></Button>
-                <Button
-                  type="primary"
-                  danger
-                  icon={<MdDelete />}
-                  onClick={() => onClickDelete(data, index)}
-                ></Button>
+                {isPermission("product.update") && (
+                  <Button
+                    type="primary"
+                    icon={<MdEdit />}
+                    onClick={() => onClickEdit(data, index)}
+                  ></Button>
+                )}
+
+                {isPermission("product.remove") && (
+                  <Button
+                    type="primary"
+                    danger
+                    icon={<MdDelete />}
+                    onClick={() => onClickDelete(data, index)}
+                  ></Button>
+                )}
               </Space>
             ),
           },

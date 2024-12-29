@@ -1,7 +1,7 @@
 import axios from "axios";
 import { configs } from "./config";
 import { setServerStatus } from "../store/server.store";
-import { getAccessToken } from "../store/profile.store";
+import { getAccessToken, getPermission } from "../store/profile.store";
 import dayjs from "dayjs";
 
 export const request = (url = "", method = "get", data = {}) => {
@@ -78,7 +78,6 @@ export const request = (url = "", method = "get", data = {}) => {
     });
 };
 
-
 export const formatDateClient = (date, format = "DD/MM/YYYY") => {
   if (date) return dayjs(date).format(format);
   return null;
@@ -87,4 +86,16 @@ export const formatDateClient = (date, format = "DD/MM/YYYY") => {
 export const formatDateServer = (date, format = "YYYY-MM-DD") => {
   if (date) return dayjs(date).format(format);
   return null;
+};
+
+export const isPermission = (namePermission) => {
+  const permission = getPermission();
+  const findPermission = permission?.findIndex(
+    (item) => item.name === namePermission
+  );
+  if (findPermission !== -1) {
+    return true;
+  } else {
+    return false;
+  }
 };

@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import logo from "../../assets/Image/Logo/Mylogo.png";
 import profile_image from "../../assets/Image/Logo/laylonghav.jpg";
@@ -267,6 +267,7 @@ const items_menu = [
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [items, setItems] = useState([]);
+  const location = useLocation();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -321,12 +322,31 @@ const MainLayout = () => {
   });
 
   useEffect(() => {
+    // alert(location.pathname);
     getMenuByUser();
+    checkIsNotPermissionViewPage();
     getconfigapi();
     if (!profile) {
       navigate("/login");
     }
   }, []);
+
+  const checkIsNotPermissionViewPage = () => {
+    const p1 = permission?.findIndex(
+      (data1) => data1.web_route_key == location.pathname
+    );
+    if (p1 == -1) {
+      // navigate("/404");
+      for (let i = 0; i < permission.length; i++) {
+        if (permission[i].web_route_key != "") {
+          navigate(permission[i].web_route_key);
+          break;
+        } else {
+          return null;
+        }
+      }
+    }
+  };
 
   const getMenuByUser = () => {
     let new_item_menu = [];
@@ -845,4 +865,5 @@ const MainLayout = () => {
     </Layout>
   );
 };
+
 export default MainLayout;
